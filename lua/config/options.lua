@@ -33,10 +33,19 @@ opt.updatetime  = 250
 opt.timeoutlen  = 300
 
 -- Files
-opt.clipboard   = "unnamedplus"
 opt.undofile    = true       -- persistent undo
 opt.swapfile    = false
 opt.backup      = false
+
+-- Clipboard: share with macOS system clipboard (pbcopy/pbpaste)
+-- Explicit provider so Kitty terminal doesn't interfere
+vim.g.clipboard = {
+  name  = "macOS",
+  copy  = { ["+"] = "pbcopy",  ["*"] = "pbcopy"  },
+  paste = { ["+"] = "pbpaste", ["*"] = "pbpaste" },
+  cache_enabled = 0,
+}
+opt.clipboard = "unnamedplus"
 
 -- Splits
 opt.splitright = true
