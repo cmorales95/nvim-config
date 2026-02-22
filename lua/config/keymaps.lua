@@ -127,7 +127,18 @@ map("n", "<leader>db", "<cmd>DBUIToggle<cr>",            { desc = "Toggle databa
 -- Jupyter / Molten
 -- ----------------------------------------------------------
 map("n", "<leader>mi", "<cmd>MoltenInit<cr>",              { desc = "Molten: init kernel" })
-map("n", "<leader>mr", "<cmd>MoltenEvaluateCell<cr>",      { desc = "Molten: run cell block" })
+map("n", "<leader>mr", function()
+  -- Find cell boundaries (# %% markers) and evaluate the block
+  local start_line = vim.fn.search("^# %%", "bcnW")
+  local end_line   = vim.fn.search("^# %%", "nW")
+  if start_line == 0 then start_line = 1 end
+  if end_line   == 0 then end_line   = vim.fn.line("$") else end_line = end_line - 1 end
+  -- Strip the marker line itself
+  if vim.fn.getline(start_line):match("^# %%") then start_line = start_line + 1 end
+  vim.fn.setpos("'<", { 0, start_line, 1, 0 })
+  vim.fn.setpos("'>", { 0, end_line,   1, 0 })
+  vim.cmd("MoltenEvaluateVisual")
+end, { desc = "Molten: run cell block" })
 map("n", "<leader>ml", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run line" })
 map("n", "<leader>mo", "<cmd>MoltenShowOutput<cr>",        { desc = "Molten: show output" })
 map("v", "<leader>mr", ":<C-u>MoltenEvaluateVisual<cr>",   { desc = "Molten: run selection" })
