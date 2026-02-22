@@ -127,17 +127,23 @@ map("n", "<leader>db", "<cmd>DBUIToggle<cr>",            { desc = "Toggle databa
 -- Jupyter / Molten
 -- ----------------------------------------------------------
 map("n", "<leader>mi", "<cmd>MoltenInit<cr>",              { desc = "Molten: init kernel" })
+-- Select lines s..e in visual line mode, exit (to flush '</>'), then evaluate
+local function molten_eval_range(s, e)
+  local keys = vim.api.nvim_replace_termcodes(
+    string.format("%dggV%dgg<Esc>", s, e), true, false, true
+  )
+  vim.api.nvim_feedkeys(keys, "x", false)
+  vim.cmd("MoltenEvaluateVisual")
+end
+
 map("n", "<leader>mr", function()
   -- Find cell boundaries (# %% markers) and evaluate the block
   local start_line = vim.fn.search("^# %%", "bcnW")
   local end_line   = vim.fn.search("^# %%", "nW")
   if start_line == 0 then start_line = 1 end
   if end_line   == 0 then end_line   = vim.fn.line("$") else end_line = end_line - 1 end
-  -- Strip the marker line itself
   if vim.fn.getline(start_line):match("^# %%") then start_line = start_line + 1 end
-  vim.fn.setpos("'<", { 0, start_line, 1, 0 })
-  vim.fn.setpos("'>", { 0, end_line,   1, 0 })
-  vim.cmd("MoltenEvaluateVisual")
+  molten_eval_range(start_line, end_line)
 end, { desc = "Molten: run cell block" })
 map("n", "<leader>ml", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run line" })
 map("n", "<leader>mo", "<cmd>MoltenShowOutput<cr>",        { desc = "Molten: show output" })
@@ -158,9 +164,7 @@ map("n", "<leader>mA", function()
       local s = markers[i] + 1
       local e = markers[i + 1] - 1
       if s <= e then
-        vim.api.nvim_win_set_cursor(0, { s, 0 })
-        vim.cmd("normal! V" .. (e - s) .. "j")
-        vim.cmd("MoltenEvaluateVisual")
+        molten_eval_range(s, e)
       end
     end
     vim.fn.setpos(".", saved)
