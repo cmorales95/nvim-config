@@ -61,16 +61,7 @@ return {
       dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
       dap.listeners.before.event_exited["dapui_config"]     = function() dapui.close() end
 
-      -- Load .vscode/launch.json automatically when it exists
-      require("dap.ext.vscode").load_launchjs(nil, {
-        -- map vscode type names → nvim-dap adapter names
-        ["go"]         = { "go" },
-        ["python"]     = { "python" },
-        ["node"]       = { "node" },
-        ["pwa-node"]   = { "node" },
-        ["chrome"]     = { "chrome" },
-        ["pwa-chrome"] = { "chrome" },
-      })
+      -- .vscode/launch.json is read automatically by nvim-dap (no setup needed)
     end,
   },
 
