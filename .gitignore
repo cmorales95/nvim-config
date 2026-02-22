@@ -1,1 +1,22 @@
+# Claude Code local settings (machine-specific permissions)
 .claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Vim swap/backup/undo files (should live in stdpath, but just in case)
+*.swp
+*.swo
+*.swn
+*~
+
+# Session files
+Session.vim
+.session.vim
+
+# Log files
+*.log
+
+# Local/private overrides (e.g. machine-specific options)
+lua/local.lua
+lua/private.lua
