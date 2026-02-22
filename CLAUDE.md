@@ -2,7 +2,7 @@
 
 ## Overview
 Full VSCode-parity Neovim configuration. Uses **lazy.nvim** as the plugin manager with a
-modular file layout. Supports Go, Python, JavaScript/TypeScript, R, and Jupyter notebooks.
+modular file layout. Supports Go, Python, JavaScript/TypeScript, and Jupyter notebooks.
 
 ## File Structure
 
@@ -156,14 +156,13 @@ Edit `lua/plugins/dap.lua`:
 
 | Requirement | Command |
 |-------------|---------|
-| R language server | `install.packages("languageserver")` in R console |
 | Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel` |
 | Inline images (Jupyter) | `brew install imagemagick luarocks && luarocks --lua-version 5.1 install magick` |
 | lazygit | `brew install lazygit` |
 | Nerd Font | Install a Nerd Font and set it as terminal font |
 | ripgrep (telescope grep) | `brew install ripgrep` |
 
-Mason auto-installs: `gopls`, `pyright`, `ts_ls`, `r_language_server`, `lua_ls`, `debugpy`.
+Mason auto-installs: `gopls`, `pyright`, `ts_ls`, `lua_ls`, `debugpy`.
 
 ---
 

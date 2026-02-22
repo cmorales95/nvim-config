@@ -102,7 +102,21 @@ return {
 
       local Terminal = require("toggleterm.terminal").Terminal
 
-      local float_term = Terminal:new({ direction = "float", hidden = true })
+      local function venv_activate_cmd()
+        local venv = vim.fn.finddir(".venv", vim.fn.getcwd() .. ";")
+        if venv ~= "" then
+          return "source " .. vim.fn.fnamemodify(venv, ":p") .. "bin/activate\n"
+        end
+      end
+
+      local float_term = Terminal:new({
+        direction = "float",
+        hidden    = true,
+        on_open   = function(term)
+          local cmd = venv_activate_cmd()
+          if cmd then vim.api.nvim_chan_send(term.job_id, cmd) end
+        end,
+      })
       local claude     = Terminal:new({
         cmd          = "claude",
         direction    = "vertical",

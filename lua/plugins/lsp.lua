@@ -1,6 +1,6 @@
 -- ============================================================
 -- LSP + Completion  (Neovim 0.11 native API)
--- Languages: Go, Python, JavaScript/TypeScript, R, Lua
+-- Languages: Go, Python, JavaScript/TypeScript, Lua
 -- ============================================================
 return {
 
@@ -33,11 +33,10 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
-        "gopls",             -- Go
-        "pyright",           -- Python
-        "ts_ls",             -- JS / TS
-        "r_language_server", -- R
-        "lua_ls",            -- Lua (for editing this config)
+        "gopls",   -- Go
+        "pyright", -- Python
+        "ts_ls",   -- JS / TS
+        "lua_ls",  -- Lua (for editing this config)
       },
       automatic_installation = true,
     },
@@ -71,9 +70,18 @@ return {
       vim.lsp.config("pyright", {
         settings = {
           python = {
+            -- prefer the project .venv if it exists, fall back to PATH
+            pythonPath = (function()
+              local venv = vim.fn.finddir(".venv", vim.fn.getcwd() .. ";")
+              if venv ~= "" then
+                return venv .. "/bin/python"
+              end
+            end)(),
+            venvPath = vim.fn.getcwd(),
             analysis = {
               typeCheckingMode = "basic",
               autoSearchPaths  = true,
+              useLibraryCodeForTypes = true,
             },
           },
         },

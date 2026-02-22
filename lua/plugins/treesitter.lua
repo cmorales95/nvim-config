@@ -10,7 +10,7 @@ return {
     opts = {
       ensure_installed = {
         "go", "python", "javascript", "typescript", "tsx",
-        "r", "lua", "bash", "json", "yaml",
+        "lua", "bash", "json", "yaml",
         "markdown", "markdown_inline", "html", "css",
       },
       auto_install = true,

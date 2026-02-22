@@ -127,6 +127,7 @@ map("n", "<leader>db", "<cmd>DBUIToggle<cr>",            { desc = "Toggle databa
 -- Jupyter / Molten
 -- ----------------------------------------------------------
 map("n", "<leader>mi", "<cmd>MoltenInit<cr>",              { desc = "Molten: init kernel" })
-map("n", "<leader>mr", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run cell" })
+map("n", "<leader>mr", "<cmd>MoltenEvaluateCell<cr>",      { desc = "Molten: run cell block" })
+map("n", "<leader>ml", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run line" })
 map("n", "<leader>mo", "<cmd>MoltenShowOutput<cr>",        { desc = "Molten: show output" })
 map("v", "<leader>mr", ":<C-u>MoltenEvaluateVisual<cr>",   { desc = "Molten: run selection" })
