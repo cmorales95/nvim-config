@@ -173,7 +173,19 @@ return {
         auto_restore_enabled            = true,
         auto_restore_lazy_delay_enabled = false,
         bypass_save_filetypes           = { "alpha", "ipynb" },
-        pre_save_cmds                   = { "Neotree close" },
+        pre_save_cmds = {
+          "Neotree close",
+          -- Close any .ipynb buffers before saving: jupytext converts them to
+          -- python filetype so bypass_save_filetypes = "ipynb" doesn't catch them.
+          -- Wiping them prevents broken session restores when files are deleted/moved.
+          function()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if vim.api.nvim_buf_get_name(buf):match("%.ipynb$") then
+                pcall(vim.api.nvim_buf_delete, buf, { force = true })
+              end
+            end
+          end,
+        },
       })
     end,
   },
