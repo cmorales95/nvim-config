@@ -9,7 +9,7 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd   = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
     ft    = { "markdown" },
-    build = function() vim.fn["mkdp#util#install"]() end,
+    build = "cd app && npm install",
     config = function()
       vim.g.mkdp_auto_close    = 1   -- close preview when leaving md buffer
       vim.g.mkdp_browser       = ""  -- use system default browser
