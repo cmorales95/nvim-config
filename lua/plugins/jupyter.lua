@@ -96,6 +96,29 @@ return {
         force_ft         = "python",
         jupytext         = vim.fn.expand("~/.venvs/nvim/bin/jupytext"),
       })
+
+      -- Guard against empty / invalid .ipynb files.
+      -- utils.get_ipynb_metadata calls vim.json.decode on the raw file with no
+      -- safety check; an empty or corrupt notebook crashes with
+      -- "invalid token at character 1".
+      local utils = require("jupytext.utils")
+      local orig_get_metadata = utils.get_ipynb_metadata
+      utils.get_ipynb_metadata = function(filename)
+        local f = io.open(filename, "r")
+        if not f then
+          error("jupytext: cannot open file: " .. tostring(filename))
+        end
+        local content = f:read("a")
+        f:close()
+        if not content or content:match("^%s*$") then
+          vim.notify(
+            "jupytext: " .. tostring(filename) .. " is empty – opening as plain Python",
+            vim.log.levels.WARN
+          )
+          return { language = "python", extension = "py" }
+        end
+        return orig_get_metadata(filename)
+      end
     end,
   },
 
