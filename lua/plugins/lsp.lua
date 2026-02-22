@@ -1,5 +1,5 @@
 -- ============================================================
--- LSP + Completion
+-- LSP + Completion  (Neovim 0.11 native API)
 -- Languages: Go, Python, JavaScript/TypeScript, R, Lua
 -- ============================================================
 return {
@@ -16,7 +16,7 @@ return {
     },
   },
 
-  -- mason-lspconfig bridge
+  -- mason-lspconfig: auto-install servers and call vim.lsp.enable() for each
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
@@ -32,7 +32,8 @@ return {
     },
   },
 
-  -- nvim-lspconfig: configure each server
+  -- nvim-lspconfig: provides server definitions (cmd, filetypes, root_dir)
+  -- We no longer call lspconfig.server.setup() — we use vim.lsp.config() instead
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -40,25 +41,24 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local lspconfig   = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Go
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
-        settings     = {
+      -- Global defaults applied to every server
+      vim.lsp.config("*", { capabilities = capabilities })
+
+      -- Per-server settings
+      vim.lsp.config("gopls", {
+        settings = {
           gopls = {
-            gofumpt    = true,
-            analyses   = { unusedparams = true },
+            gofumpt     = true,
+            analyses    = { unusedparams = true },
             staticcheck = true,
           },
         },
       })
 
-      -- Python
-      lspconfig.pyright.setup({
-        capabilities = capabilities,
-        settings     = {
+      vim.lsp.config("pyright", {
+        settings = {
           python = {
             analysis = {
               typeCheckingMode = "basic",
@@ -68,16 +68,8 @@ return {
         },
       })
 
-      -- JavaScript / TypeScript
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
-
-      -- R
-      lspconfig.r_language_server.setup({ capabilities = capabilities })
-
-      -- Lua (self-editing this config)
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        settings     = {
+      vim.lsp.config("lua_ls", {
+        settings = {
           Lua = {
             runtime  = { version = "LuaJIT" },
             workspace = {
@@ -96,26 +88,26 @@ return {
         callback = function(event)
           local opts = { buffer = event.buf }
           local map  = vim.keymap.set
-          map("n", "gd",          vim.lsp.buf.definition,     vim.tbl_extend("force", opts, { desc = "Go to definition" }))
-          map("n", "gD",          vim.lsp.buf.declaration,    vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
-          map("n", "gr",          vim.lsp.buf.references,     vim.tbl_extend("force", opts, { desc = "References" }))
-          map("n", "gi",          vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
-          map("n", "K",           vim.lsp.buf.hover,          vim.tbl_extend("force", opts, { desc = "Hover docs" }))
-          map("n", "<leader>rn",  vim.lsp.buf.rename,         vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
-          map("n", "<leader>ca",  vim.lsp.buf.code_action,    vim.tbl_extend("force", opts, { desc = "Code action" }))
-          map("n", "[d",          vim.diagnostic.goto_prev,   vim.tbl_extend("force", opts, { desc = "Prev diagnostic" }))
-          map("n", "]d",          vim.diagnostic.goto_next,   vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+          map("n", "gd",         vim.lsp.buf.definition,     vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+          map("n", "gD",         vim.lsp.buf.declaration,    vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
+          map("n", "gr",         vim.lsp.buf.references,     vim.tbl_extend("force", opts, { desc = "References" }))
+          map("n", "gi",         vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+          map("n", "K",          vim.lsp.buf.hover,          vim.tbl_extend("force", opts, { desc = "Hover docs" }))
+          map("n", "<leader>rn", vim.lsp.buf.rename,         vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+          map("n", "<leader>ca", vim.lsp.buf.code_action,    vim.tbl_extend("force", opts, { desc = "Code action" }))
+          map("n", "[d",         vim.diagnostic.goto_prev,   vim.tbl_extend("force", opts, { desc = "Prev diagnostic" }))
+          map("n", "]d",         vim.diagnostic.goto_next,   vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         end,
       })
 
-      -- Diagnostic display config
+      -- Diagnostic display
       vim.diagnostic.config({
-        virtual_text   = { prefix = "●" },
-        signs          = true,
-        underline      = true,
+        virtual_text     = { prefix = "●" },
+        signs            = true,
+        underline        = true,
         update_in_insert = false,
-        severity_sort  = true,
-        float          = { border = "rounded", source = "always" },
+        severity_sort    = true,
+        float            = { border = "rounded", source = "always" },
       })
     end,
   },
