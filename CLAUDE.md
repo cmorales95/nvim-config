@@ -157,12 +157,58 @@ Edit `lua/plugins/dap.lua`:
 | Requirement | Command |
 |-------------|---------|
 | R language server | `install.packages("languageserver")` in R console |
-| Jupyter support | `pip install pynvim jupyter_client` |
+| Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel` |
+| Inline images (Jupyter) | `brew install imagemagick luarocks && luarocks --lua-version 5.1 install magick` |
 | lazygit | `brew install lazygit` |
 | Nerd Font | Install a Nerd Font and set it as terminal font |
 | ripgrep (telescope grep) | `brew install ripgrep` |
 
 Mason auto-installs: `gopls`, `pyright`, `ts_ls`, `r_language_server`, `lua_ls`, `debugpy`.
+
+---
+
+## Git Strategy
+
+### Branching model
+- **`main`** — always stable and working. Never push broken config here.
+- **`feat/<name>`** — short-lived branches for adding plugins, new LSPs, or experiments.
+  Merge to main only after verifying it works inside nvim.
+- Example branch names: `feat/rust-lsp`, `feat/obsidian-plugin`, `feat/dap-js`
+
+### When to commit directly to main
+- Documentation changes (README, CLAUDE.md)
+- Trivial config tweaks (keymaps, options, color changes)
+- Hotfixes to a broken plugin config
+
+### When to use a feature branch
+- Adding a new language (LSP + treesitter + formatter + DAP)
+- Adding a plugin that requires significant config
+- Any change that could break existing workflow
+
+### Versioning (semantic)
+`v<major>.<minor>.<patch>`
+
+| Bump | When |
+|------|------|
+| **major** | Breaking restructure of the whole config layout |
+| **minor** | New language support, new major feature (e.g. Jupyter, DAP) |
+| **patch** | Bug fixes, option tweaks, documentation |
+
+### Creating a release
+```sh
+# Tag on main after merging
+git tag v<version> -m "v<version>: <short description>"
+git push origin v<version>
+
+# GitHub release with changelog
+gh release create v<version> --title "v<version> — <title>" --notes "<changelog>"
+```
+
+### Current version history
+| Tag | Description |
+|-----|-------------|
+| `v1.0.0` | Initial modular VSCode-parity config (Go, Python, JS/TS, R, Lua) |
+| `v1.1.0` | VSCode-like Jupyter: kitty inline images, auto-output, dedicated Python venv |
 
 ---
 
