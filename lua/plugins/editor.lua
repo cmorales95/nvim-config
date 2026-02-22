@@ -31,7 +31,9 @@ return {
       telescope.setup({
         defaults = {
           layout_strategy  = "horizontal",
-          layout_config    = { preview_width = 0.55 },
+          layout_config    = {
+            horizontal = { preview_width = 0.55 },
+          },
           sorting_strategy = "ascending",
           winblend         = 0,
         },
