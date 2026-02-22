@@ -47,6 +47,16 @@ vim.g.clipboard = {
 }
 opt.clipboard = "unnamedplus"
 
+-- Auto-save: write on focus lost and when leaving insert mode (VSCode-style)
+vim.api.nvim_create_autocmd({ "FocusLost", "InsertLeave", "TextChanged" }, {
+  pattern  = "*",
+  callback = function()
+    if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then
+      vim.cmd("silent! write")
+    end
+  end,
+})
+
 -- Splits
 opt.splitright = true
 opt.splitbelow = true
