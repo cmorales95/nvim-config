@@ -84,6 +84,17 @@
 
 ---
 
+## Moving between panels
+
+| Key | Where you go |
+|---|---|
+| `<C-h>` | Move left (e.g. editor → neo-tree) |
+| `<C-l>` | Move right (e.g. neo-tree → editor) |
+| `<C-j>` | Move down |
+| `<C-k>` | Move up |
+
+> Inside neo-tree: `j/k` to navigate files, `Enter` to open.
+
 ## Splits (windows)
 
 | Key | What it does |
