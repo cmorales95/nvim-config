@@ -57,3 +57,6 @@ opt.foldlevel  = 99
 
 -- Python provider (dedicated venv so system Python stays clean)
 vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")
+
+-- Add nvim venv bin to PATH so tools like jupytext are found by plugins
+vim.env.PATH = vim.fn.expand("~/.venvs/nvim/bin") .. ":" .. vim.env.PATH
