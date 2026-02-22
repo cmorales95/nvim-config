@@ -6,7 +6,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build  = ":TSUpdate",
-    event  = { "BufReadPost", "BufNewFile" },
+    event  = { "BufReadPost", "BufNewFile", "FileType" },
     opts = {
       ensure_installed = {
         "go", "python", "javascript", "typescript", "tsx",
