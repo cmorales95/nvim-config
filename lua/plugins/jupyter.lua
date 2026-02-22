@@ -39,11 +39,43 @@ return {
       vim.g.molten_enter_output_behavior = "open_and_enter"
     end,
     config = function()
-      -- Auto-load kernel when opening a jupytext-converted notebook
+      -- Find the jupyter kernel whose argv points to the project .venv
+      local function venv_kernel_name()
+        local venv = vim.fn.finddir(".venv", vim.fn.getcwd() .. ";")
+        if venv == "" then return nil end
+        local venv_python = vim.fn.fnamemodify(venv, ":p") .. "bin/python"
+        local raw  = vim.fn.system("jupyter kernelspec list --json 2>/dev/null")
+        local ok, specs = pcall(vim.fn.json_decode, raw)
+        if not ok or not specs or not specs.kernelspecs then return nil end
+        for name, spec in pairs(specs.kernelspecs) do
+          local argv = spec.spec and spec.spec.argv
+          if argv and argv[1] and argv[1]:find(venv_python, 1, true) then
+            return name
+          end
+        end
+        return nil
+      end
+
+      -- Auto-init kernel when opening a jupytext-converted notebook (# %% file)
+      vim.api.nvim_create_autocmd("BufReadPost", {
+        pattern  = "*.py",
+        callback = function()
+          -- Only act on hydrogen-style notebooks (has at least one # %% marker)
+          local has_cell = vim.fn.search("^# %%", "nw") > 0
+          if not has_cell then return end
+          local kernel = venv_kernel_name()
+          if kernel then
+            vim.schedule(function()
+              pcall(vim.cmd, "MoltenInit " .. kernel)
+            end)
+          end
+        end,
+      })
+
+      -- Import outputs after kernel is ready
       vim.api.nvim_create_autocmd("User", {
         pattern  = "MoltenInitPost",
         callback = function()
-          -- Import outputs if a .ipynb companion exists
           local ipynb = vim.fn.expand("%:r") .. ".ipynb"
           if vim.fn.filereadable(ipynb) == 1 then
             pcall(vim.cmd, "MoltenImportOutput")

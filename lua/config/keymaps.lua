@@ -143,24 +143,33 @@ map("n", "<leader>ml", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run
 map("n", "<leader>mo", "<cmd>MoltenShowOutput<cr>",        { desc = "Molten: show output" })
 map("n", "<leader>mR", "<cmd>MoltenReevaluateAll<cr>",     { desc = "Molten: re-run all cells" })
 map("n", "<leader>mA", function()
-  -- Run every # %% cell block from top to bottom
-  local total = vim.fn.line("$")
-  local markers = {}
-  for lnum = 1, total do
-    if vim.fn.getline(lnum):match("^# %%") then
-      table.insert(markers, lnum)
+  local function run_all()
+    local total = vim.fn.line("$")
+    local markers = {}
+    for lnum = 1, total do
+      if vim.fn.getline(lnum):match("^# %%") then
+        table.insert(markers, lnum)
+      end
     end
-  end
-  table.insert(markers, total + 1) -- sentinel
+    table.insert(markers, total + 1) -- sentinel
 
-  for i = 1, #markers - 1 do
-    local s = markers[i] + 1       -- skip the # %% line
-    local e = markers[i + 1] - 1   -- up to (but not including) next marker
-    if s <= e then
-      vim.fn.setpos("'<", { 0, s, 1, 0 })
-      vim.fn.setpos("'>", { 0, e, 1, 0 })
-      vim.cmd("MoltenEvaluateVisual")
+    local saved = vim.fn.getpos(".")
+    for i = 1, #markers - 1 do
+      local s = markers[i] + 1
+      local e = markers[i + 1] - 1
+      if s <= e then
+        vim.api.nvim_win_set_cursor(0, { s, 0 })
+        vim.cmd("normal! V" .. (e - s) .. "j")
+        vim.cmd("MoltenEvaluateVisual")
+      end
     end
+    vim.fn.setpos(".", saved)
+  end
+
+  -- If kernel not ready, init with MoltenInit (will prompt) then run
+  local ok = pcall(run_all)
+  if not ok then
+    vim.notify("Molten: no kernel — run <leader>mi to init first", vim.log.levels.WARN)
   end
 end, { desc = "Molten: run all cells" })
 map("v", "<leader>mr", ":<C-u>MoltenEvaluateVisual<cr>",   { desc = "Molten: run selection" })
