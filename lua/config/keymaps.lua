@@ -38,7 +38,10 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 -- ----------------------------------------------------------
 map("n", "]b",          "<cmd>BufferLineCycleNext<cr>",  { desc = "Next buffer" })
 map("n", "[b",          "<cmd>BufferLineCyclePrev<cr>",  { desc = "Prev buffer" })
-map("n", "<leader>bd",  "<cmd>bdelete<cr>",              { desc = "Close buffer" })
+map("n", "<leader>bd", function()
+  pcall(vim.cmd, "MoltenDeinit") -- safely deinit kernel if active
+  vim.cmd("bdelete")
+end, { desc = "Close buffer" })
 
 -- ----------------------------------------------------------
 -- File explorer (neo-tree)
