@@ -41,6 +41,7 @@
 | `<leader>fg` | Search text inside files (live grep) |
 | `<leader>fb` | Switch between open buffers |
 | `<leader>fh` | Search help docs |
+| `<leader>fs` | Search & switch sessions |
 | `<leader>s` | Flash jump — type a char to jump anywhere on screen |
 
 > Inside Telescope: type to filter · `<CR>` to open · `<Esc>` to cancel · `<C-j/k>` to move up/down

@@ -130,6 +130,25 @@ return {
     },
   },
 
+  -- Session management — auto save/restore per working directory
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("auto-session").setup({
+        auto_save_enabled    = true,
+        auto_restore_enabled = true,
+        -- Don't restore when opening a specific file (only bare `nvim`)
+        auto_restore_lazy_delay_enabled = false,
+        bypass_save_filetypes = { "alpha" },
+        -- Close neo-tree before saving so it restores cleanly
+        pre_save_cmds  = { "Neotree close" },
+        post_restore_cmds = { "Neotree show" },
+      })
+    end,
+  },
+
   -- Format on save
   {
     "stevearc/conform.nvim",
