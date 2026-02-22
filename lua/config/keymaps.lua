@@ -40,7 +40,7 @@ map("n", "]b",          "<cmd>BufferLineCycleNext<cr>",  { desc = "Next buffer" 
 map("n", "[b",          "<cmd>BufferLineCyclePrev<cr>",  { desc = "Prev buffer" })
 map("n", "<leader>bd", function()
   pcall(vim.cmd, "MoltenDeinit") -- safely deinit kernel if active
-  vim.cmd("bdelete")
+  pcall(vim.cmd, "bdelete")     -- jupytext BufUnload cleanup may error on invalid .ipynb
 end, { desc = "Close buffer" })
 
 -- ----------------------------------------------------------

@@ -4,6 +4,28 @@
 -- ============================================================
 return {
 
+  -- Inline markdown rendering (headings, code blocks, tables, checkboxes)
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft           = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {
+      heading = {
+        sign    = false,
+        icons   = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+      },
+      code = {
+        sign        = false,
+        width       = "block",
+        right_pad   = 1,
+      },
+      checkbox = {
+        unchecked = { icon = "󰄱 " },
+        checked   = { icon = "󰱒 " },
+      },
+    },
+  },
+
   -- Markdown live preview in browser
   {
     "iamcco/markdown-preview.nvim",

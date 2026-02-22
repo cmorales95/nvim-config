@@ -172,7 +172,7 @@ return {
         auto_save_enabled               = true,
         auto_restore_enabled            = true,
         auto_restore_lazy_delay_enabled = false,
-        bypass_save_filetypes           = { "alpha" },
+        bypass_save_filetypes           = { "alpha", "ipynb" },
         pre_save_cmds                   = { "Neotree close" },
       })
     end,
