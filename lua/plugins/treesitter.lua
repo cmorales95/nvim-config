@@ -19,6 +19,13 @@ return {
     },
   },
 
+  -- Auto-close and auto-rename HTML/JSX tags
+  {
+    "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
+    opts  = {},
+  },
+
   -- Shows current function/class context pinned at top while scrolling
   {
     "nvim-treesitter/nvim-treesitter-context",

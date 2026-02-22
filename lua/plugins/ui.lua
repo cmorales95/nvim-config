@@ -249,6 +249,18 @@ return {
     end,
   },
 
+  -- Aerial: symbols outline panel (like VSCode's Outline view)
+  {
+    "stevearc/aerial.nvim",
+    event        = "LspAttach",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {
+      layout = { default_direction = "right", min_width = 30 },
+      attach_mode = "global",
+      show_guides = true,
+    },
+  },
+
   -- Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",

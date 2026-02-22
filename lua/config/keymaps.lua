@@ -61,6 +61,29 @@ map("n", "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
 map("v", "<C-/>", "gc",  { desc = "Toggle comment", remap = true })
 
 -- ----------------------------------------------------------
+-- Aerial (symbols outline)
+-- ----------------------------------------------------------
+map("n", "<leader>o", "<cmd>AerialToggle<cr>", { desc = "Toggle symbols outline" })
+
+-- ----------------------------------------------------------
+-- Harpoon (pinned files)
+-- ----------------------------------------------------------
+map("n", "<leader>ha", function() require("harpoon"):list():add() end,                                      { desc = "Harpoon: add file" })
+map("n", "<leader>hh", function() local h = require("harpoon") h.ui:toggle_quick_menu(h:list()) end,        { desc = "Harpoon: menu" })
+map("n", "<leader>h1", function() require("harpoon"):list():select(1) end,                                   { desc = "Harpoon: file 1" })
+map("n", "<leader>h2", function() require("harpoon"):list():select(2) end,                                   { desc = "Harpoon: file 2" })
+map("n", "<leader>h3", function() require("harpoon"):list():select(3) end,                                   { desc = "Harpoon: file 3" })
+map("n", "<leader>h4", function() require("harpoon"):list():select(4) end,                                   { desc = "Harpoon: file 4" })
+
+-- ----------------------------------------------------------
+-- LSPSaga (enhanced LSP UI)
+-- ----------------------------------------------------------
+map("n", "gh",         "<cmd>Lspsaga finder<cr>",           { desc = "LSP finder" })
+map("n", "<leader>pd", "<cmd>Lspsaga peek_definition<cr>",  { desc = "Peek definition" })
+map("n", "<leader>rn", "<cmd>Lspsaga rename<cr>",           { desc = "Rename symbol" })
+map("n", "<leader>ca", "<cmd>Lspsaga code_action<cr>",      { desc = "Code action" })
+
+-- ----------------------------------------------------------
 -- Diagnostics / code (LSP keymaps live in plugins/lsp.lua
 -- via LspAttach autocmd; global ones here)
 -- ----------------------------------------------------------

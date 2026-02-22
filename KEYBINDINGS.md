@@ -134,6 +134,32 @@
 
 ---
 
+## Symbols Outline (Aerial)
+
+| Key | What it does |
+|---|---|
+| `<leader>o` | Toggle symbols outline (functions, classes, variables) |
+
+## Harpoon (pinned files)
+
+| Key | What it does |
+|---|---|
+| `<leader>ha` | Pin current file |
+| `<leader>hh` | Open pin menu |
+| `<leader>h1` | Jump to pin 1 |
+| `<leader>h2` | Jump to pin 2 |
+| `<leader>h3` | Jump to pin 3 |
+| `<leader>h4` | Jump to pin 4 |
+
+## LSPSaga (enhanced LSP UI)
+
+| Key | What it does |
+|---|---|
+| `gh` | LSP finder (references + implementations) |
+| `<leader>pd` | Peek definition (see definition in float without leaving file) |
+| `<leader>rn` | Rename symbol (saga UI) |
+| `<leader>ca` | Code action (saga UI) |
+
 ## Git
 
 | Key | What it does |

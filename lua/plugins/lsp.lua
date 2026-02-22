@@ -123,7 +123,18 @@ return {
     end,
   },
 
-  -- Completion engine
+  -- lspsaga: enhanced LSP UI (hover, code actions, breadcrumbs, finder)
+  {
+    "nvimdev/lspsaga.nvim",
+    event        = "LspAttach",
+    dependencies = { "nvim-tree/nvim-web-devicons", "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      lightbulb  = { enable = false },   -- fidget handles LSP status
+      symbol_in_winbar = { enable = true },
+    },
+  },
+
+  -- Completion engine + lspkind icons + friendly-snippets
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -131,12 +142,20 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
+      "onsails/lspkind.nvim",
+      {
+        "L3MON4D3/LuaSnip",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        config = function()
+          require("luasnip.loaders.from_vscode").lazy_load()
+        end,
+      },
       "saadparwaiz1/cmp_luasnip",
     },
     config = function()
       local cmp     = require("cmp")
       local luasnip = require("luasnip")
+      local lspkind = require("lspkind")
 
       cmp.setup({
         snippet = {
@@ -145,6 +164,14 @@ return {
         window = {
           completion    = cmp.config.window.bordered(),
           documentation = cmp.config.window.bordered(),
+        },
+        -- VSCode-style icons in the completion menu
+        formatting = {
+          format = lspkind.cmp_format({
+            mode        = "symbol_text",
+            maxwidth    = 50,
+            ellipsis_char = "...",
+          }),
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
