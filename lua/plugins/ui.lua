@@ -102,6 +102,50 @@ return {
     },
   },
 
+  -- Dashboard (VSCode-like start screen)
+  {
+    "goolord/alpha-nvim",
+    lazy         = false,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      local alpha     = require("alpha")
+      local dashboard = require("alpha.themes.dashboard")
+
+      dashboard.section.header.val = {
+        "                                                       ",
+        "   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+        "   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+        "   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+        "   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+        "   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+        "   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+        "                                                       ",
+      }
+
+      dashboard.section.buttons.val = {
+        dashboard.button("f", "  Find file",     "<cmd>Telescope find_files<cr>"),
+        dashboard.button("r", "  Recent files",  "<cmd>Telescope oldfiles<cr>"),
+        dashboard.button("g", "  Live grep",     "<cmd>Telescope live_grep<cr>"),
+        dashboard.button("n", "  New file",      "<cmd>ene <BAR> startinsert<cr>"),
+        dashboard.button("q", "  Quit",          "<cmd>qa<cr>"),
+      }
+
+      dashboard.section.footer.val = "No shortcuts. Just flow."
+      dashboard.section.footer.opts.hl = "Comment"
+
+      alpha.setup(dashboard.config)
+
+      -- Auto-open neo-tree alongside the dashboard (VSCode sidebar feel)
+      vim.api.nvim_create_autocmd("User", {
+        pattern  = "AlphaReady",
+        callback = function()
+          vim.cmd("Neotree show")
+          vim.cmd("wincmd l") -- keep focus on dashboard
+        end,
+      })
+    end,
+  },
+
   -- Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
