@@ -37,6 +37,9 @@ return {
       vim.g.molten_virt_text_output      = true
       vim.g.molten_virt_lines_off_by_1   = true
       vim.g.molten_enter_output_behavior = "open_and_enter"
+      vim.g.molten_output_win_style      = "split"
+      vim.g.molten_split_direction       = "right"
+      vim.g.molten_split_size            = 40
     end,
     config = function()
       -- Find the jupyter kernel whose argv points to the project .venv
@@ -140,6 +143,7 @@ return {
         cell_bg = "JupytextMDCell",
         sep     = "JupytextMDSep",
       },
+      molten = { output_split = true },
     },
   },
 
