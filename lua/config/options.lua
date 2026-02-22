@@ -45,3 +45,6 @@ opt.splitbelow = true
 -- Folding (treesitter-based, optional)
 opt.foldmethod = "indent"
 opt.foldlevel  = 99
+
+-- Python provider (dedicated venv so system Python stays clean)
+vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")

@@ -50,16 +50,22 @@ Run these once before first launch:
 
 ```sh
 # macOS
-brew install lazygit ripgrep
+brew install lazygit ripgrep imagemagick luarocks
 
-# Python support for Jupyter
-pip install pynvim jupyter_client
+# Lua binding for image rendering (used by image.nvim)
+luarocks --lua-version 5.1 install magick
+
+# Dedicated Python venv for Neovim (keeps system Python clean)
+uv venv ~/.venvs/nvim --python 3.12
+uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel
 
 # R language server (in R console)
 install.packages("languageserver")
 ```
 
 Also install a [Nerd Font](https://www.nerdfonts.com/) and set it as your terminal font (icons won't render without it).
+
+**For inline plot/image output:** requires Kitty terminal (used by default). The config uses Kitty's native image protocol via `image.nvim`.
 
 Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first launch.
 
