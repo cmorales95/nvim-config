@@ -158,7 +158,6 @@ return {
         auto_restore_lazy_delay_enabled = false,
         bypass_save_filetypes           = { "alpha" },
         pre_save_cmds                   = { "Neotree close" },
-        post_restore_cmds               = { "Neotree show" },
       })
     end,
   },

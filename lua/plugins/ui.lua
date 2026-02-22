@@ -243,9 +243,9 @@ return {
         pattern  = "AlphaReady",
         callback = function()
           vim.defer_fn(function()
-            vim.cmd("Neotree show")
-            vim.cmd("wincmd l")
-          end, 50)
+            pcall(vim.cmd, "Neotree show")
+            pcall(vim.cmd, "wincmd l")
+          end, 100)
         end,
       })
     end,
