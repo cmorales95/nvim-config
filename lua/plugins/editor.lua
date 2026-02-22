@@ -108,6 +108,7 @@ return {
         display_name = "Claude Code",
         on_open = function(term)
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+          vim.cmd("wincmd H") -- push to far left
         end,
       })
       local lazygit = Terminal:new({
