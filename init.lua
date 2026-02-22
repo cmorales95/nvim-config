@@ -27,6 +27,7 @@ require("lazy").setup({
   { import = "plugins.treesitter" },
   { import = "plugins.dap" },
   { import = "plugins.jupyter" },
+  { import = "plugins.filetypes" },
 }, {
   change_detection = { notify = false },
 })

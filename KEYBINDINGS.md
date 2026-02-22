@@ -190,6 +190,22 @@
 
 ---
 
+## Filetype Tools
+
+| Key | What it does | Active in |
+|---|---|---|
+| `<leader>mp` | Toggle markdown preview in browser | `.md` files |
+| `<leader>rr` | Run HTTP request under cursor | `.http` files |
+| `<leader>rl` | Re-run last HTTP request | anywhere |
+| `<leader>db` | Toggle database UI (SQL) | anywhere |
+
+### CSV files
+Open any `.csv` file — columns are automatically color-coded by `rainbow_csv`.
+Use `:RainbowAlign` to align columns, `:Select * where col > x` to query.
+
+### JSON / YAML files
+Schema validation is automatic — `package.json`, `tsconfig.json`, `docker-compose.yml`, etc. get validated against known schemas with LSP errors inline.
+
 ## Jupyter (Molten)
 
 | Key | What it does |

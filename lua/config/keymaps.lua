@@ -114,6 +114,12 @@ map("n", "<leader>dt", "<cmd>lua require('dap').terminate()<cr>",         { desc
 map("n", "<leader>du", "<cmd>lua require('dapui').toggle()<cr>",          { desc = "Toggle DAP UI" })
 
 -- ----------------------------------------------------------
+-- Filetype tools
+-- ----------------------------------------------------------
+map("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle markdown preview" })
+map("n", "<leader>db", "<cmd>DBUIToggle<cr>",            { desc = "Toggle database UI" })
+
+-- ----------------------------------------------------------
 -- Jupyter / Molten
 -- ----------------------------------------------------------
 map("n", "<leader>mi", "<cmd>MoltenInit<cr>",              { desc = "Molten: init kernel" })
