@@ -59,9 +59,10 @@ return {
     lazy   = false,
     config = function()
       require("jupytext").setup({
-        style          = "hydrogen",   -- # %% cell markers (VSCode-style)
-        output_extension = "auto",     -- keep .ipynb companion on disk
-        force_ft       = "python",     -- always treat converted file as Python
+        style            = "hydrogen",
+        output_extension = "auto",
+        force_ft         = "python",
+        jupytext         = vim.fn.expand("~/.venvs/nvim/bin/jupytext"),
       })
     end,
   },
