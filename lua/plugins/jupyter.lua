@@ -102,7 +102,7 @@ return {
   -- Markdown rendering for # %% [markdown] cells in jupytext Python files
   {
     "cmorales95/jupytext-render.nvim",
-    ft           = { "python" },
+    event        = "VeryLazy",
     dependencies = { "MeanderingProgrammer/render-markdown.nvim" },
     opts = {
       keymaps    = { toggle = "<leader>mM" },
