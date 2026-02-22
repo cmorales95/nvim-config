@@ -97,31 +97,33 @@ return {
         jupytext         = vim.fn.expand("~/.venvs/nvim/bin/jupytext"),
       })
 
-      -- Guard against empty / invalid .ipynb files.
-      -- utils.get_ipynb_metadata calls vim.json.decode on the raw file with no
-      -- safety check; an empty or corrupt notebook crashes with
-      -- "invalid token at character 1".
-      local utils = require("jupytext.utils")
-      local orig_get_metadata = utils.get_ipynb_metadata
-      utils.get_ipynb_metadata = function(filename)
-        local f = io.open(filename, "r")
-        if not f then
-          vim.notify(
-            "jupytext: cannot open file: " .. tostring(filename) .. " – opening as plain Python",
-            vim.log.levels.WARN
-          )
-          return { language = "python", extension = "py" }
-        end
-        local content = f:read("a")
-        f:close()
-        if not content or content:match("^%s*$") then
-          vim.notify(
-            "jupytext: " .. tostring(filename) .. " is empty – opening as plain Python",
-            vim.log.levels.WARN
-          )
-          return { language = "python", extension = "py" }
-        end
-        return orig_get_metadata(filename)
+      -- Wrap the BufReadCmd autocmd that jupytext creates so that any failure
+      -- (missing file, corrupt notebook, jupytext CLI error) is caught and
+      -- turned into a harmless warning instead of crashing session restore.
+      -- Capture the original callback, then replace the augroup.
+      local orig_cb
+      for _, au in ipairs(vim.api.nvim_get_autocmds({ group = "jupytext-nvim", event = "BufReadCmd" })) do
+        orig_cb = au.callback
+        break
+      end
+      if orig_cb then
+        vim.api.nvim_create_augroup("jupytext-nvim", { clear = true })
+        vim.api.nvim_create_autocmd("BufReadCmd", {
+          pattern = { "*.ipynb" },
+          group   = "jupytext-nvim",
+          callback = function(ev)
+            local ok, err = pcall(orig_cb, ev)
+            if not ok then
+              vim.notify(
+                "jupytext: failed to open " .. ev.match .. "\n" .. tostring(err),
+                vim.log.levels.WARN
+              )
+              -- Set buffer to empty scratch so session restore can continue
+              vim.bo[ev.buf].buftype = "nofile"
+              vim.bo[ev.buf].filetype = "python"
+            end
+          end,
+        })
       end
     end,
   },
