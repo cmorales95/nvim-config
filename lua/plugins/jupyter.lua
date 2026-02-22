@@ -106,7 +106,11 @@ return {
       utils.get_ipynb_metadata = function(filename)
         local f = io.open(filename, "r")
         if not f then
-          error("jupytext: cannot open file: " .. tostring(filename))
+          vim.notify(
+            "jupytext: cannot open file: " .. tostring(filename) .. " – opening as plain Python",
+            vim.log.levels.WARN
+          )
+          return { language = "python", extension = "py" }
         end
         local content = f:read("a")
         f:close()
