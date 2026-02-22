@@ -122,6 +122,10 @@
 
 | Key | What it does | Mode |
 |---|---|---|
+| `<C-/>` | Toggle comment (VSCode-style) | Normal, Visual |
+| `gcc` | Toggle comment on line (vim-style) | Normal |
+| `gc` + motion | Comment a motion e.g. `gc5j` | Normal |
+| `gc` | Toggle comment on selection (vim-style) | Visual |
 | `<` | Indent left (stays selected) | Visual |
 | `>` | Indent right (stays selected) | Visual |
 | `J` | Move selection down | Visual |

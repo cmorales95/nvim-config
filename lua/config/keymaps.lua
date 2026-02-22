@@ -54,6 +54,13 @@ map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",           { desc = "Help 
 map("n", "<leader>fs", "<cmd>Telescope session-lens<cr>",        { desc = "Search sessions" })
 
 -- ----------------------------------------------------------
+-- Commenting (VSCode-style Ctrl+/)
+-- Built-in `gcc` / `gc` still work — these are aliases for migration
+-- ----------------------------------------------------------
+map("n", "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
+map("v", "<C-/>", "gc",  { desc = "Toggle comment", remap = true })
+
+-- ----------------------------------------------------------
 -- Diagnostics / code (LSP keymaps live in plugins/lsp.lua
 -- via LspAttach autocmd; global ones here)
 -- ----------------------------------------------------------
