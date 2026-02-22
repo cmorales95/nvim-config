@@ -141,4 +141,26 @@ map("n", "<leader>mr", function()
 end, { desc = "Molten: run cell block" })
 map("n", "<leader>ml", "<cmd>MoltenEvaluateLine<cr>",      { desc = "Molten: run line" })
 map("n", "<leader>mo", "<cmd>MoltenShowOutput<cr>",        { desc = "Molten: show output" })
+map("n", "<leader>mR", "<cmd>MoltenReevaluateAll<cr>",     { desc = "Molten: re-run all cells" })
+map("n", "<leader>mA", function()
+  -- Run every # %% cell block from top to bottom
+  local total = vim.fn.line("$")
+  local markers = {}
+  for lnum = 1, total do
+    if vim.fn.getline(lnum):match("^# %%") then
+      table.insert(markers, lnum)
+    end
+  end
+  table.insert(markers, total + 1) -- sentinel
+
+  for i = 1, #markers - 1 do
+    local s = markers[i] + 1       -- skip the # %% line
+    local e = markers[i + 1] - 1   -- up to (but not including) next marker
+    if s <= e then
+      vim.fn.setpos("'<", { 0, s, 1, 0 })
+      vim.fn.setpos("'>", { 0, e, 1, 0 })
+      vim.cmd("MoltenEvaluateVisual")
+    end
+  end
+end, { desc = "Molten: run all cells" })
 map("v", "<leader>mr", ":<C-u>MoltenEvaluateVisual<cr>",   { desc = "Molten: run selection" })
