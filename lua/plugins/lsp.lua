@@ -17,8 +17,10 @@ return {
   },
 
   -- mason-lspconfig bridge
+  -- Pinned to v1.x — v2+ requires nvim 0.11 (vim.lsp.enable API)
   {
     "williamboman/mason-lspconfig.nvim",
+    version      = "^1.0.0",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
