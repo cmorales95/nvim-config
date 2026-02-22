@@ -242,8 +242,10 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern  = "AlphaReady",
         callback = function()
-          vim.cmd("Neotree show")
-          vim.cmd("wincmd l")
+          vim.defer_fn(function()
+            vim.cmd("Neotree show")
+            vim.cmd("wincmd l")
+          end, 50)
         end,
       })
     end,
