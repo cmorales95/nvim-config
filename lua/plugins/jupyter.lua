@@ -46,7 +46,7 @@ return {
           -- Import outputs if a .ipynb companion exists
           local ipynb = vim.fn.expand("%:r") .. ".ipynb"
           if vim.fn.filereadable(ipynb) == 1 then
-            vim.cmd("MoltenImportOutput")
+            pcall(vim.cmd, "MoltenImportOutput")
           end
         end,
       })
