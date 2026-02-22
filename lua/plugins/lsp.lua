@@ -4,6 +4,17 @@
 -- ============================================================
 return {
 
+  -- lazydev: better LSP completion for editing this nvim config
+  {
+    "folke/lazydev.nvim",
+    ft   = "lua",
+    opts = {
+      library = {
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+
   -- Mason: LSP/tool installer
   {
     "williamboman/mason.nvim",

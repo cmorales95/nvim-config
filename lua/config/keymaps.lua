@@ -68,6 +68,18 @@ map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Toggle d
 map("n", "<leader>fm", function() require("conform").format({ async = true, lsp_fallback = true }) end, { desc = "Format file" })
 
 -- ----------------------------------------------------------
+-- Git (diffview)
+-- ----------------------------------------------------------
+map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>",        { desc = "Open diffview" })
+map("n", "<leader>gh", "<cmd>DiffviewFileHistory<cr>", { desc = "File history" })
+map("n", "<leader>gx", "<cmd>DiffviewClose<cr>",       { desc = "Close diffview" })
+
+-- ----------------------------------------------------------
+-- TODO comments
+-- ----------------------------------------------------------
+map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Search TODOs" })
+
+-- ----------------------------------------------------------
 -- Debugger
 -- ----------------------------------------------------------
 map("n", "<leader>db", "<cmd>lua require('dap').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })

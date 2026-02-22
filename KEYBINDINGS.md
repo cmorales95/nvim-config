@@ -42,6 +42,7 @@
 | `<leader>fb` | Switch between open buffers |
 | `<leader>fh` | Search help docs |
 | `<leader>fs` | Search & switch sessions |
+| `<leader>ft` | Search TODO/FIXME comments |
 | `<leader>s` | Flash jump — type a char to jump anywhere on screen |
 
 > Inside Telescope: type to filter · `<CR>` to open · `<Esc>` to cancel · `<C-j/k>` to move up/down
@@ -132,6 +133,22 @@
 | `K` | Move selection up | Visual |
 
 ---
+
+## Git
+
+| Key | What it does |
+|---|---|
+| `<leader>gd` | Open diffview (full git diff) |
+| `<leader>gh` | File git history |
+| `<leader>gx` | Close diffview |
+
+## Surround (mini.surround)
+
+| Key | What it does |
+|---|---|
+| `gsa` | Add surrounding (e.g. `gsa"` wraps in quotes) |
+| `gsd` | Delete surrounding |
+| `gsr` | Replace surrounding |
 
 ## Debugger
 

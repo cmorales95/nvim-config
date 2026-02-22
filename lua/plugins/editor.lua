@@ -1,7 +1,8 @@
 -- ============================================================
 -- Editor plugins
 -- Covers: motion, telescope, git, autopairs, terminal,
---         diagnostics panel, format on save
+--         diagnostics, format, session, lint,
+--         todo-comments, mini.ai, mini.surround, diffview
 -- ============================================================
 return {
 
@@ -14,19 +15,30 @@ return {
     },
   },
 
-  -- Fuzzy finder
+  -- Fuzzy finder + fzf native sorter for speed
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd  = "Telescope",
-    opts = {
-      defaults = {
-        layout_strategy = "horizontal",
-        layout_config   = { preview_width = 0.55 },
-        sorting_strategy = "ascending",
-        winblend = 0,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
       },
     },
+    cmd  = "Telescope",
+    config = function()
+      local telescope = require("telescope")
+      telescope.setup({
+        defaults = {
+          layout_strategy  = "horizontal",
+          layout_config    = { preview_width = 0.55 },
+          sorting_strategy = "ascending",
+          winblend         = 0,
+        },
+      })
+      telescope.load_extension("fzf")
+      telescope.load_extension("session-lens")
+    end,
   },
 
   -- Git signs in gutter
@@ -42,6 +54,14 @@ return {
         changedelete = { text = "▎" },
       },
     },
+  },
+
+  -- Git diff viewer
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd  = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+    opts = {},
   },
 
   -- Auto-close pairs
@@ -70,24 +90,18 @@ return {
           end
           return 20
         end,
-        open_mapping    = nil,  -- we set our own below
+        open_mapping    = nil,
         hide_numbers    = true,
         shade_terminals = false,
         start_in_insert = true,
         direction       = "float",
-        float_opts      = {
-          border   = "curved",
-          winblend = 3,
-        },
+        float_opts      = { border = "curved", winblend = 3 },
       })
 
       local Terminal = require("toggleterm.terminal").Terminal
 
-      -- Generic floating terminal
       local float_term = Terminal:new({ direction = "float", hidden = true })
-
-      -- Claude Code — persistent vertical split so context is preserved
-      local claude = Terminal:new({
+      local claude     = Terminal:new({
         cmd          = "claude",
         direction    = "vertical",
         hidden       = true,
@@ -96,8 +110,6 @@ return {
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
         end,
       })
-
-      -- lazygit
       local lazygit = Terminal:new({
         cmd          = "lazygit",
         direction    = "float",
@@ -106,12 +118,10 @@ return {
         float_opts   = { border = "double" },
       })
 
-      vim.keymap.set("n", "<leader>tt", function() float_term:toggle() end,  { desc = "Toggle terminal" })
-      vim.keymap.set("n", "<leader>cc", function() claude:toggle() end,       { desc = "Toggle Claude Code" })
-      vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end,      { desc = "Toggle lazygit" })
-
-      -- Allow Esc to exit terminal mode back to normal
-      vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+      vim.keymap.set("n", "<leader>tt", function() float_term:toggle() end, { desc = "Toggle terminal" })
+      vim.keymap.set("n", "<leader>cc", function() claude:toggle() end,      { desc = "Toggle Claude Code" })
+      vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end,     { desc = "Toggle lazygit" })
+      vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>",                       { desc = "Exit terminal mode" })
     end,
   },
 
@@ -122,29 +132,81 @@ return {
     cmd  = "Trouble",
     opts = {
       modes = {
-        diagnostics = {
-          auto_open   = false,
-          auto_close  = true,
-        },
+        diagnostics = { auto_open = false, auto_close = true },
       },
     },
+  },
+
+  -- TODO/FIXME/HACK/NOTE highlight and search
+  {
+    "folke/todo-comments.nvim",
+    event        = "BufReadPost",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts         = {},
   },
 
   -- Session management — auto save/restore per working directory
   {
     "rmagatti/auto-session",
-    lazy = false,
+    lazy         = false,
     dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
       require("auto-session").setup({
-        auto_save_enabled    = true,
-        auto_restore_enabled = true,
-        -- Don't restore when opening a specific file (only bare `nvim`)
+        auto_save_enabled               = true,
+        auto_restore_enabled            = true,
         auto_restore_lazy_delay_enabled = false,
-        bypass_save_filetypes = { "alpha" },
-        -- Close neo-tree before saving so it restores cleanly
-        pre_save_cmds  = { "Neotree close" },
-        post_restore_cmds = { "Neotree show" },
+        bypass_save_filetypes           = { "alpha" },
+        pre_save_cmds                   = { "Neotree close" },
+        post_restore_cmds               = { "Neotree show" },
+      })
+    end,
+  },
+
+  -- mini.ai: smarter text objects (va), viq, daA, etc.)
+  {
+    "echasnovski/mini.ai",
+    version = "*",
+    event   = "VeryLazy",
+    opts    = { n_lines = 500 },
+  },
+
+  -- mini.surround: add/change/delete surrounding chars
+  {
+    "echasnovski/mini.surround",
+    version = "*",
+    event   = "VeryLazy",
+    opts = {
+      mappings = {
+        add            = "gsa",
+        delete         = "gsd",
+        find           = "gsf",
+        find_left      = "gsF",
+        highlight      = "gsh",
+        replace        = "gsr",
+        update_n_lines = "gsn",
+      },
+    },
+  },
+
+  -- Async linter (separate from formatter)
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufWritePost" },
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = {
+        go         = { "golangcilint" },
+        python     = { "ruff" },
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+      }
+      -- Run linter on save and when entering a buffer
+      vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+        callback = function()
+          lint.try_lint()
+        end,
       })
     end,
   },
@@ -155,22 +217,19 @@ return {
     event = "BufWritePre",
     opts  = {
       formatters_by_ft = {
-        go         = { "goimports", "gofmt" },
-        python     = { "isort", "black" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
+        go              = { "goimports", "gofmt" },
+        python          = { "isort", "black" },
+        javascript      = { "prettier" },
+        typescript      = { "prettier" },
         javascriptreact = { "prettier" },
         typescriptreact = { "prettier" },
-        json       = { "prettier" },
-        yaml       = { "prettier" },
-        markdown   = { "prettier" },
-        r          = { "formatR" },
-        lua        = { "stylua" },
+        json            = { "prettier" },
+        yaml            = { "prettier" },
+        markdown        = { "prettier" },
+        r               = { "formatR" },
+        lua             = { "stylua" },
       },
-      format_on_save = {
-        timeout_ms   = 1000,
-        lsp_fallback = true,
-      },
+      format_on_save = { timeout_ms = 1000, lsp_fallback = true },
     },
   },
 
