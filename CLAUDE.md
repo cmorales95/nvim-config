@@ -215,6 +215,8 @@ gh release create v<version> --title "v<version> — <title>" --notes "<changelo
 | `v1.2.0` | Neovim 0.11 upgrade, project config files, KEYBINDINGS.md cheatsheet |
 | `v1.3.0` | UI overhaul (noice, fidget, dressing, rainbow), 12 new plugins, Catppuccin, VSCode parity |
 | `v1.4.0` | neotest-golang test runner, nvim-ufo LSP folding, fix `<leader>db` keymap conflict |
+| `v1.5.0` | claudecode.nvim integration for Claude Code |
+| `v1.5.1` | setup.sh installer script, README rewrite, tree-sitter dependency fix |
 
 ---
 
