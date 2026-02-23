@@ -109,7 +109,7 @@ map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Search TODOs" })
 -- ----------------------------------------------------------
 -- Debugger
 -- ----------------------------------------------------------
-map("n", "<leader>db", "<cmd>lua require('dap').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })
+map("n", "<leader>db", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })
 map("n", "<leader>dc", "<cmd>lua require('dap').continue()<cr>",          { desc = "Continue" })
 map("n", "<leader>di", "<cmd>lua require('dap').step_into()<cr>",         { desc = "Step into" })
 map("n", "<leader>do", "<cmd>lua require('dap').step_over()<cr>",         { desc = "Step over" })

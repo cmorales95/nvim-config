@@ -12,6 +12,16 @@ return {
     lazy = true,
   },
 
+  -- Persist breakpoints across sessions
+  {
+    "Weissle/persistent-breakpoints.nvim",
+    dependencies = { "mfussenegger/nvim-dap" },
+    opts = {
+      save_dir = vim.fn.stdpath("data") .. "/breakpoints",
+      load_breakpoints_event = { "BufReadPost" },
+    },
+  },
+
   -- Inline variable values while stepping (like VSCode inline values)
   {
     "theHamsta/nvim-dap-virtual-text",

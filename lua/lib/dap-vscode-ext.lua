@@ -381,6 +381,27 @@ local function on_config_handler(config)
     config = substitute(config, resolved)
   end
 
+  -- Resolve envFile: Delve/DAP doesn't support envFile natively — the VS Code
+  -- Go extension reads the file and injects vars. We do the same here.
+  if config.envFile then
+    local env_path = config.envFile
+    local f = io.open(env_path, "r")
+    if f then
+      local env = config.env or {}
+      for line in f:lines() do
+        local key, value = line:match("^([%w_]+)%s*=%s*(.*)$")
+        if key then
+          -- Strip surrounding quotes if present
+          value = value:gsub("^[\"'](.-)[\"']$", "%1")
+          env[key] = value
+        end
+      end
+      f:close()
+      config.env = env
+      config.envFile = nil
+    end
+  end
+
   -- Go adapter: translate VS Code's "auto" mode to Delve-compatible mode
   if config.type == "go" and config.mode == "auto" then
     local program = config.program or ""
