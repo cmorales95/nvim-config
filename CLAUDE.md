@@ -217,6 +217,7 @@ gh release create v<version> --title "v<version> — <title>" --notes "<changelo
 | `v1.4.0` | neotest-golang test runner, nvim-ufo LSP folding, fix `<leader>db` keymap conflict |
 | `v1.5.0` | claudecode.nvim integration for Claude Code |
 | `v1.5.1` | setup.sh installer script, README rewrite, tree-sitter-cli dependency fix |
+| `v1.5.2` | fix rest.nvim build with tree-sitter-cli and hererocks for Lua 5.1 |
 
 ---
 
