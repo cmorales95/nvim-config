@@ -72,9 +72,11 @@ vim.api.nvim_create_autocmd("FileType", {
 opt.splitright = true
 opt.splitbelow = true
 
--- Folding (treesitter-based, optional)
-opt.foldmethod = "indent"
-opt.foldlevel  = 99
+-- Folding (nvim-ufo handles method via LSP/treesitter)
+opt.foldcolumn     = "1"
+opt.foldlevel      = 99
+opt.foldlevelstart = 99
+opt.foldenable     = true
 
 -- Python provider (dedicated venv so system Python stays clean)
 vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")

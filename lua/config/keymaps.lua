@@ -121,7 +121,15 @@ map("n", "<leader>du", "<cmd>lua require('dapui').toggle()<cr>",          { desc
 -- Filetype tools
 -- ----------------------------------------------------------
 map("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle markdown preview" })
-map("n", "<leader>db", "<cmd>DBUIToggle<cr>",            { desc = "Toggle database UI" })
+map("n", "<leader>Du", "<cmd>DBUIToggle<cr>",             { desc = "Toggle database UI" })
+
+-- ----------------------------------------------------------
+-- Test runner (neotest)
+-- ----------------------------------------------------------
+map("n", "<leader>tr", function() require("neotest").run.run() end,                     { desc = "Run nearest test" })
+map("n", "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end,   { desc = "Run file tests" })
+map("n", "<leader>ts", function() require("neotest").summary.toggle() end,              { desc = "Toggle test summary" })
+map("n", "<leader>to", function() require("neotest").output.open({ enter = true }) end, { desc = "Show test output" })
 
 -- ----------------------------------------------------------
 -- Jupyter / Molten

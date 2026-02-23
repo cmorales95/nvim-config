@@ -157,8 +157,9 @@ return {
         { "<leader>f", group = "Find (telescope)" },
         { "<leader>d", group = "Debug" },
         { "<leader>m", group = "Molten (Jupyter)" },
-        { "<leader>t", group = "Terminal" },
+        { "<leader>t", group = "Terminal / Test" },
         { "<leader>g", group = "Git" },
+        { "<leader>D", group = "Database" },
       })
     end,
   },
@@ -272,6 +273,23 @@ return {
       indent = { char = "│" },
       scope  = { enabled = true },
     },
+  },
+
+  -- LSP/treesitter-aware folding with peek preview
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    event = "BufReadPost",
+    opts = {
+      provider_selector = function()
+        return { "treesitter", "indent" }
+      end,
+    },
+    init = function()
+      vim.keymap.set("n", "zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
+      vim.keymap.set("n", "zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
+      vim.keymap.set("n", "zK", function() require("ufo").peekFoldedLinesUnderCursor() end, { desc = "Peek fold" })
+    end,
   },
 
   -- Inline color previews (#rgb, css colors, etc.)

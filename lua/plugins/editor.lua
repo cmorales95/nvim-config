@@ -275,6 +275,26 @@ return {
     end,
   },
 
+  -- Test runner (Go)
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "fredrikaverpil/neotest-golang",
+    },
+    ft = "go",
+    config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-golang"),
+        },
+      })
+    end,
+  },
+
   -- Format on save
   {
     "stevearc/conform.nvim",
