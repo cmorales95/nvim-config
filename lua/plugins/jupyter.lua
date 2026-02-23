@@ -110,9 +110,13 @@ return {
             pcall(vim.cmd, "MoltenEvaluateArgument " .. chdir_code)
           end
 
-          local ipynb = vim.fn.expand("%:r") .. ".ipynb"
-          if vim.fn.filereadable(ipynb) == 1 then
-            pcall(vim.cmd, "MoltenImportOutput")
+          -- Skip output import during session restore — temp image files
+          -- from the previous session no longer exist and would crash image.nvim.
+          if not vim.g._molten_skip_import then
+            local ipynb = vim.fn.expand("%:r") .. ".ipynb"
+            if vim.fn.filereadable(ipynb) == 1 then
+              pcall(vim.cmd, "MoltenImportOutput")
+            end
           end
         end,
       })

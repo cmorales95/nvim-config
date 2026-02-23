@@ -172,18 +172,30 @@ return {
         auto_save_enabled               = true,
         auto_restore_enabled            = true,
         auto_restore_lazy_delay_enabled = false,
-        bypass_save_filetypes           = { "alpha", "ipynb" },
+        bypass_save_filetypes           = { "alpha" },
         pre_save_cmds = {
           "Neotree close",
-          -- Close any .ipynb buffers before saving: jupytext converts them to
-          -- python filetype so bypass_save_filetypes = "ipynb" doesn't catch them.
-          -- Wiping them prevents broken session restores when files are deleted/moved.
+        },
+        post_restore_cmds = {
+          -- Re-read .ipynb buffers after session restore so the full
+          -- jupytext → FileType → render-markdown chain runs cleanly.
+          -- Skip MoltenImportOutput (temp image files from the previous
+          -- session are gone and would cause image.nvim errors).
           function()
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              if vim.api.nvim_buf_get_name(buf):match("%.ipynb$") then
-                pcall(vim.api.nvim_buf_delete, buf, { force = true })
+            vim.g._molten_skip_import = true
+            vim.defer_fn(function()
+              for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_loaded(buf)
+                  and vim.api.nvim_buf_get_name(buf):match("%.ipynb$") then
+                  vim.api.nvim_buf_call(buf, function()
+                    pcall(vim.cmd, "edit")
+                  end)
+                end
               end
-            end
+              -- Clear the flag once all re-edits and their MoltenInitPost
+              -- handlers have had time to fire.
+              vim.defer_fn(function() vim.g._molten_skip_import = nil end, 5000)
+            end, 500)
           end,
         },
       })
