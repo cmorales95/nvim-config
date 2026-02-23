@@ -21,7 +21,8 @@ return {
     opts = { default = true },
   },
 
-  -- Colorscheme: Catppuccin Mocha
+  -- Colorscheme: Catppuccin Mocha (dark) + Tokyo Night Day (light)
+  -- Auto-switches based on macOS system appearance
   {
     "catppuccin/nvim",
     name     = "catppuccin",
@@ -62,7 +63,68 @@ return {
           },
         },
       })
-      vim.cmd("colorscheme catppuccin-mocha")
+    end,
+  },
+
+  {
+    "folke/tokyonight.nvim",
+    lazy     = false,
+    priority = 1000,
+    config   = function()
+      require("tokyonight").setup({
+        style = "day",
+      })
+    end,
+  },
+
+  -- Auto dark/light theme switcher based on macOS appearance
+  {
+    "cormacrelf/dark-notify",
+    lazy     = false,
+    priority = 999,
+    config   = function()
+      -- Helper: apply the right theme and update kitty + lualine
+      local function apply_theme(mode)
+        if mode == "dark" then
+          vim.o.background = "dark"
+          vim.cmd("colorscheme catppuccin-mocha")
+          -- Update kitty terminal colors
+          vim.fn.jobstart(
+            { "kitty", "@", "set-colors", "--all",
+              vim.fn.expand("~/.config/kitty/themes/dark.conf") },
+            { detach = true }
+          )
+          vim.fn.jobstart(
+            { "cp", vim.fn.expand("~/.config/kitty/themes/dark.conf"),
+              vim.fn.expand("~/.config/kitty/current-theme.conf") },
+            { detach = true }
+          )
+        else
+          vim.o.background = "light"
+          vim.cmd("colorscheme tokyonight-day")
+          -- Update kitty terminal colors
+          vim.fn.jobstart(
+            { "kitty", "@", "set-colors", "--all",
+              vim.fn.expand("~/.config/kitty/themes/light.conf") },
+            { detach = true }
+          )
+          vim.fn.jobstart(
+            { "cp", vim.fn.expand("~/.config/kitty/themes/light.conf"),
+              vim.fn.expand("~/.config/kitty/current-theme.conf") },
+            { detach = true }
+          )
+        end
+        -- Refresh lualine theme
+        pcall(function()
+          require("lualine").setup({
+            options = { theme = (mode == "dark") and "catppuccin" or "tokyonight" },
+          })
+        end)
+      end
+
+      require("dark_notify").run({
+        onchange = apply_theme,
+      })
     end,
   },
 
@@ -137,7 +199,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme            = "catppuccin",
+        theme            = "auto",
         globalstatus     = true,
         section_separators   = { left = "", right = "" },
         component_separators = { left = "", right = "" },
