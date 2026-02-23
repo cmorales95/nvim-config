@@ -203,7 +203,7 @@ return {
     cmd  = "Neotree",
     opts = {
       window = {
-        width    = 35,
+        width    = 45,
         position = "right",
       },
       filesystem = {
