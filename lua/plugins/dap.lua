@@ -55,8 +55,8 @@ return {
         layouts = {
           {
             elements = {
-              { id = "scopes",      size = 0.25 },
-              { id = "breakpoints", size = 0.25 },
+              { id = "scopes",      size = 0.35 },
+              { id = "breakpoints", size = 0.15 },
               { id = "stacks",      size = 0.25 },
               { id = "watches",     size = 0.25 },
             },
@@ -64,17 +64,29 @@ return {
             position = "left",
           },
           {
-            elements = { { id = "console", size = 0.6 }, { id = "repl", size = 0.4 } },
+            elements = { { id = "repl", size = 1.0 } },
             size     = 15,
             position = "bottom",
           },
         },
       })
 
-      -- Auto open/close UI with session
+      -- Auto open UI with session (close manually with <leader>du)
       dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-      dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-      dap.listeners.before.event_exited["dapui_config"]     = function() dapui.close() end
+
+      -- Auto-scroll REPL to bottom when new output arrives
+      dap.listeners.after.event_output["dapui_scroll"] = function()
+        vim.defer_fn(function()
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            if vim.bo[buf].filetype == "dap-repl" then
+              local line_count = vim.api.nvim_buf_line_count(buf)
+              pcall(vim.api.nvim_win_set_cursor, win, { line_count, 0 })
+              break
+            end
+          end
+        end, 50)
+      end
 
       -- .vscode/launch.json is read automatically by nvim-dap (no setup needed)
 

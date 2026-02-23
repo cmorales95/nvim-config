@@ -16,6 +16,8 @@ modular file layout. Supports Go, Python, JavaScript/TypeScript, and Jupyter not
     config/
       options.lua             ← vim.opt settings
       keymaps.lua             ← all global keymaps
+    lib/
+      dap-vscode-ext.lua      ← VS Code extension command resolver for nvim-dap
     plugins/
       ui.lua                  ← colorscheme, statusline, bufferline, neo-tree, indent guides
       editor.lua              ← telescope, gitsigns, toggleterm, trouble, conform
@@ -104,6 +106,7 @@ Edit `lua/plugins/dap.lua`:
 | `<leader>ff` | Telescope: find files |
 | `<leader>fg` | Telescope: live grep |
 | `<leader>fb` | Telescope: open buffers |
+| `<leader>fk` | Telescope: search keymaps |
 
 ### Buffer Tabs
 | Key | Action |
@@ -136,13 +139,18 @@ Edit `lua/plugins/dap.lua`:
 ### Debugger
 | Key | Action |
 |-----|--------|
-| `<leader>db` | Toggle breakpoint |
-| `<leader>dc` | Continue |
+| `<leader>db` | Toggle breakpoint (persistent) |
+| `<leader>dB` | Clear all breakpoints |
+| `<leader>dc` | Start / Continue |
 | `<leader>di` | Step into |
 | `<leader>do` | Step over |
 | `<leader>dO` | Step out |
 | `<leader>dt` | Terminate |
+| `<leader>dr` | Restart |
+| `<leader>dp` | Pause |
 | `<leader>du` | Toggle DAP UI |
+| `<leader>de` | Eval expression (normal + visual) |
+| `<leader>dl` | Run last config |
 
 ### Jupyter (Molten)
 | Key | Action |
@@ -165,6 +173,8 @@ Run `./setup.sh` from the repo root to install all dependencies automatically.
 | Lua image binding | `luarocks --lua-version 5.1 install magick` |
 | Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel cairosvg pnglatex plotly kaleido pyperclip nbformat` |
 | Nerd Font | Install a Nerd Font and set it as terminal font |
+
+| Go debugger | Delve (`dlv`) installed via `go install` or `setup.sh` |
 
 Mason auto-installs: `gopls`, `pyright`, `ts_ls`, `lua_ls`, `debugpy`.
 
@@ -219,6 +229,7 @@ gh release create v<version> --title "v<version> — <title>" --notes "<changelo
 | `v1.5.1` | setup.sh installer script, README rewrite, tree-sitter-cli dependency fix |
 | `v1.5.2` | fix rest.nvim build with tree-sitter-cli and hererocks for Lua 5.1 |
 | `v1.5.3` | replace rest.nvim with kulala.nvim (simpler HTTP client, no luarocks) |
+| `v1.6.0` | VS Code launch.json extension resolver, enhanced DAP (persistent breakpoints, envFile, output) |
 
 ---
 

@@ -28,6 +28,7 @@ The setup script installs:
 - Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `fd`
 - Lua rocks: `magick` (for image rendering)
 - Python venv at `~/.venvs/nvim` with Jupyter dependencies
+- Go tools: `dlv` (Delve debugger) if Go is installed
 
 ### First launch
 
@@ -95,6 +96,9 @@ The setup script installs:
 | nvim-dap-ui | Debugger UI |
 | nvim-dap-go | Go debugger (delve) |
 | nvim-dap-python | Python debugger (debugpy) |
+| nvim-dap-virtual-text | Inline variable values while stepping |
+| persistent-breakpoints | Breakpoints saved across sessions |
+| dap-vscode-ext | VS Code extension command resolver (custom `lib/`) |
 
 ### Filetype-specific
 
@@ -130,6 +134,8 @@ Mason auto-installs these on first use.
     config/
       options.lua       <- vim.opt settings
       keymaps.lua       <- global keymaps
+    lib/
+      dap-vscode-ext.lua <- VS Code extension command resolver for nvim-dap
     plugins/
       ui.lua            <- theme, statusline, bufferline, neo-tree
       editor.lua        <- telescope, gitsigns, toggleterm, trouble, conform
@@ -153,6 +159,7 @@ Leader key: `<Space>`
 | `<leader>fg` | Live grep |
 | `<leader>fb` | Open buffers |
 | `<leader>fh` | Help tags |
+| `<leader>fk` | Search keymaps |
 | `<leader>s` | Flash jump |
 | `]b` / `[b` | Next / prev buffer |
 | `<leader>bd` | Close buffer |
@@ -186,13 +193,18 @@ Leader key: `<Space>`
 
 | Key | Action |
 |---|---|
-| `<leader>db` | Toggle breakpoint |
-| `<leader>dc` | Continue |
+| `<leader>db` | Toggle breakpoint (persistent) |
+| `<leader>dB` | Clear all breakpoints |
+| `<leader>dc` | Start / Continue |
 | `<leader>di` | Step into |
 | `<leader>do` | Step over |
 | `<leader>dO` | Step out |
 | `<leader>dt` | Terminate |
+| `<leader>dr` | Restart |
+| `<leader>dp` | Pause |
 | `<leader>du` | Toggle DAP UI |
+| `<leader>de` | Eval expression (normal + visual) |
+| `<leader>dl` | Run last config |
 
 ### Terminal & tools
 

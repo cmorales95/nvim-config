@@ -403,13 +403,22 @@ local function on_config_handler(config)
     end
   end
 
-  -- Go adapter: translate VS Code's "auto" mode to Delve-compatible mode
-  if config.type == "go" and config.mode == "auto" then
-    local program = config.program or ""
-    if program:match("_test%.go$") then
-      config.mode = "test"
-    else
-      config.mode = "debug"
+  -- Go adapter compatibility fixes for launch.json configs
+  if config.type == "go" then
+    -- Translate VS Code's "auto" mode to Delve-compatible mode
+    if config.mode == "auto" then
+      local program = config.program or ""
+      if program:match("_test%.go$") then
+        config.mode = "test"
+      else
+        config.mode = "debug"
+      end
+    end
+    -- Ensure program output is sent as DAP events (shown in console panel).
+    -- launch.json configs don't include this, but Delve needs it to redirect
+    -- stdout/stderr through DAP instead of swallowing it.
+    if not config.outputMode then
+      config.outputMode = "remote"
     end
   end
 
