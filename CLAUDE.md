@@ -210,6 +210,7 @@ gh release create v<version> --title "v<version> — <title>" --notes "<changelo
 | `v1.1.0` | VSCode-like Jupyter: kitty inline images, auto-output, dedicated Python venv |
 | `v1.2.0` | Neovim 0.11 upgrade, project config files, KEYBINDINGS.md cheatsheet |
 | `v1.3.0` | UI overhaul (noice, fidget, dressing, rainbow), 12 new plugins, Catppuccin, VSCode parity |
+| `v1.4.0` | neotest-golang test runner, nvim-ufo LSP folding, fix `<leader>db` keymap conflict |
 
 ---
 
