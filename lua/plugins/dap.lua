@@ -81,9 +81,9 @@ return {
     dependencies = { "mfussenegger/nvim-dap" },
     config       = function()
       require("dap-go").setup({
-        dap_configurations = {},
         delve = {
-          path = vim.fn.expand("$HOME") .. "/go/bin/dlv",
+          path = os.getenv("HOME") .. "/go/bin/dlv",
+          initialize_timeout_sec = 30,
         },
       })
     end,

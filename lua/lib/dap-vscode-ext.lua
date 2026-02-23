@@ -401,6 +401,23 @@ end
 function M.setup()
   local dap = require("dap")
   dap.listeners.on_config["dap-vscode-ext"] = on_config_handler
+
+  -- Wrap _load_json to strip type:"command" inputs before nvim-dap sees them.
+  -- nvim-dap only supports promptString/pickString and warns on type:"command".
+  -- We handle these ourselves in the on_config handler, so remove them here
+  -- to suppress the "Unsupported input type" warning.
+  local vscode = require("dap.ext.vscode")
+  local orig_load_json = vscode._load_json
+  vscode._load_json = function(jsonstr)
+    local ok, data = pcall(vim.json.decode, jsonstr, { skip_comments = true })
+    if ok and type(data) == "table" and data.inputs then
+      data.inputs = vim.tbl_filter(function(input)
+        return input.type ~= "command"
+      end, data.inputs)
+      jsonstr = vim.json.encode(data)
+    end
+    return orig_load_json(jsonstr)
+  end
 end
 
 return M
