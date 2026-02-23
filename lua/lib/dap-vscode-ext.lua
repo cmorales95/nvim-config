@@ -383,15 +383,16 @@ local function on_config_handler(config)
 
   -- Resolve envFile: Delve/DAP doesn't support envFile natively — the VS Code
   -- Go extension reads the file and injects vars. We do the same here.
+  -- Resolve ${workspaceFolder} manually since dap.expand_variable may not
+  -- have run yet (on_config handler ordering is not guaranteed).
   if config.envFile then
-    local env_path = config.envFile
+    local env_path = config.envFile:gsub("%${workspaceFolder}", vim.fn.getcwd())
     local f = io.open(env_path, "r")
     if f then
       local env = config.env or {}
       for line in f:lines() do
         local key, value = line:match("^([%w_]+)%s*=%s*(.*)$")
         if key then
-          -- Strip surrounding quotes if present
           value = value:gsub("^[\"'](.-)[\"']$", "%1")
           env[key] = value
         end
