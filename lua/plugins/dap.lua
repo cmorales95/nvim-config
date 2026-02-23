@@ -30,7 +30,12 @@ return {
   -- DAP UI (Variables, Call Stack, Breakpoints, Console panels)
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio",
+      "leoluz/nvim-dap-go",
+      "mfussenegger/nvim-dap-python",
+    },
     config = function()
       local dap   = require("dap")
       local dapui = require("dapui")
@@ -62,23 +67,32 @@ return {
       dap.listeners.before.event_exited["dapui_config"]     = function() dapui.close() end
 
       -- .vscode/launch.json is read automatically by nvim-dap (no setup needed)
+
+      -- Resolve custom ${command:...} and ${input:...} variables from
+      -- project-local VS Code extensions (e.g. call-importer-launcher)
+      require("lib.dap-vscode-ext").setup()
     end,
   },
 
   -- Go debugger (delve)
   {
     "leoluz/nvim-dap-go",
-    ft           = "go",
+    lazy         = true,
     dependencies = { "mfussenegger/nvim-dap" },
     config       = function()
-      require("dap-go").setup()
+      require("dap-go").setup({
+        dap_configurations = {},
+        delve = {
+          path = vim.fn.expand("$HOME") .. "/go/bin/dlv",
+        },
+      })
     end,
   },
 
   -- Python debugger (debugpy via mason)
   {
     "mfussenegger/nvim-dap-python",
-    ft           = "python",
+    lazy         = true,
     dependencies = { "mfussenegger/nvim-dap", "williamboman/mason.nvim" },
     config = function()
       local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"

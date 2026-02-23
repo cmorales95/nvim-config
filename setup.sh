@@ -104,6 +104,21 @@ else
 fi
 
 # =============================================================================
+# Go tools (for DAP debugging with Delve)
+# =============================================================================
+if command -v go &> /dev/null; then
+    info "Installing Go tools..."
+    if [[ -x "$HOME/go/bin/dlv" ]]; then
+        info "dlv (Delve) is already installed"
+    else
+        info "Installing dlv (Delve debugger)..."
+        go install github.com/go-delve/delve/cmd/dlv@latest
+    fi
+else
+    warn "Go is not installed — skipping Delve debugger install"
+fi
+
+# =============================================================================
 # Nerd Font check
 # =============================================================================
 echo ""
