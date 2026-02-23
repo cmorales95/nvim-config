@@ -25,7 +25,7 @@ cd ~/.config/nvim
 ```
 
 The setup script installs:
-- Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `tree-sitter-cli`, `fd`
+- Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `fd`
 - Lua rocks: `magick` (for image rendering)
 - Python venv at `~/.venvs/nvim` with Jupyter dependencies
 
@@ -103,7 +103,7 @@ The setup script installs:
 | molten-nvim | Jupyter notebook support |
 | render-markdown | Inline markdown rendering |
 | markdown-preview | Live preview in browser |
-| rest.nvim | HTTP REST client (.http files) |
+| kulala.nvim | HTTP REST client (.http files) |
 | vim-dadbod | SQL database client |
 
 ## Languages supported
@@ -211,12 +211,14 @@ Leader key: `<Space>`
 | `<leader>mr` | Run line / selection |
 | `<leader>mo` | Show cell output |
 
-### HTTP (rest.nvim)
+### HTTP (kulala.nvim)
 
 | Key | Action |
 |---|---|
 | `<leader>rr` | Run HTTP request |
 | `<leader>rl` | Re-run last request |
+| `<leader>ri` | Inspect request |
+| `[r` / `]r` | Prev / next request |
 
 ### General
 
@@ -241,7 +243,7 @@ Leader key: `<Space>`
 :MoltenInit        Start Jupyter kernel
 :MarkdownPreview   Preview markdown in browser
 :DBUI              SQL database UI
-:Rest run          Run HTTP request
+:lua require('kulala').run()   Run HTTP request
 ```
 
 ## Troubleshooting
@@ -252,13 +254,6 @@ Leader key: `<Space>`
 # Clear plugin cache and reinstall
 rm -rf ~/.local/share/nvim/lazy
 nvim  # plugins will reinstall
-```
-
-### rest.nvim fails with tree-sitter-cli error
-
-Install tree-sitter-cli CLI:
-```sh
-brew install tree-sitter-cli
 ```
 
 ### LSP not attaching

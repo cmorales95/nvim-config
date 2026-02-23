@@ -161,7 +161,7 @@ Run `./setup.sh` from the repo root to install all dependencies automatically.
 
 | Requirement | Command |
 |-------------|---------|
-| Homebrew packages | `brew install neovim lazygit ripgrep imagemagick luarocks tree-sitter-cli fd` |
+| Homebrew packages | `brew install neovim lazygit ripgrep imagemagick luarocks fd` |
 | Lua image binding | `luarocks --lua-version 5.1 install magick` |
 | Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel cairosvg pnglatex plotly kaleido pyperclip nbformat` |
 | Nerd Font | Install a Nerd Font and set it as terminal font |

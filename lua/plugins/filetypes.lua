@@ -66,29 +66,20 @@ return {
 
   -- HTTP REST client — run .http files like VSCode REST Client
   {
-    "rest-nvim/rest.nvim",
-    ft           = { "http" },
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("rest-nvim").setup({
-        result_split_horizontal = false,
-        result_split_in_place   = false,
-        stay_in_current_window_after_split = true,
-        skip_ssl_verification   = false,
-        highlight = { enabled = true, timeout = 150 },
-        result = {
-          show_url        = true,
-          show_http_info  = true,
-          show_headers    = true,
-          formatters = {
-            json = "jq",
-            html = { cmd = { "tidy", "-i", "-q" } },
-          },
-        },
-      })
+    "mistweaverco/kulala.nvim",
+    ft = { "http" },
+    opts = {
+      split_direction = "vertical",
+      default_view = "body",
+    },
+    config = function(_, opts)
+      require("kulala").setup(opts)
       -- <leader>rr to run request under cursor
-      vim.keymap.set("n", "<leader>rr", "<cmd>Rest run<cr>",      { desc = "Run HTTP request", ft = "http" })
-      vim.keymap.set("n", "<leader>rl", "<cmd>Rest run last<cr>", { desc = "Re-run last HTTP request" })
+      vim.keymap.set("n", "<leader>rr", function() require("kulala").run() end, { desc = "Run HTTP request" })
+      vim.keymap.set("n", "<leader>rl", function() require("kulala").replay() end, { desc = "Re-run last HTTP request" })
+      vim.keymap.set("n", "<leader>ri", function() require("kulala").inspect() end, { desc = "Inspect HTTP request" })
+      vim.keymap.set("n", "[r", function() require("kulala").jump_prev() end, { desc = "Prev HTTP request" })
+      vim.keymap.set("n", "]r", function() require("kulala").jump_next() end, { desc = "Next HTTP request" })
     end,
   },
 
