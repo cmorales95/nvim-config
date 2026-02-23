@@ -39,31 +39,57 @@ return {
       vim.g.molten_enter_output_behavior = "open_and_enter"
     end,
     config = function()
-      -- Find the jupyter kernel whose argv points to the project .venv
-      local function venv_kernel_name()
-        local venv = vim.fn.finddir(".venv", vim.fn.getcwd() .. ";")
+      -- Find the jupyter kernel whose argv points to a .venv near start_dir.
+      -- If no registered kernel matches, auto-register the venv's ipykernel.
+      local function venv_kernel_name(start_dir)
+        local venv = vim.fn.finddir(".venv", start_dir .. ";")
         if venv == "" then return nil end
-        local venv_python = vim.fn.fnamemodify(venv, ":p") .. "bin/python"
+        local venv_path   = vim.fn.fnamemodify(venv, ":p")
+        local venv_python = venv_path .. "bin/python"
+
+        -- Check registered kernels for a match
         local raw  = vim.fn.system("jupyter kernelspec list --json 2>/dev/null")
         local ok, specs = pcall(vim.fn.json_decode, raw)
-        if not ok or not specs or not specs.kernelspecs then return nil end
-        for name, spec in pairs(specs.kernelspecs) do
-          local argv = spec.spec and spec.spec.argv
-          if argv and argv[1] and argv[1]:find(venv_python, 1, true) then
-            return name
+        if ok and specs and specs.kernelspecs then
+          for name, spec in pairs(specs.kernelspecs) do
+            local argv = spec.spec and spec.spec.argv
+            if argv and argv[1] and argv[1]:find(venv_python, 1, true) then
+              return name
+            end
           end
+        end
+
+        -- No registered kernel — auto-register if ipykernel is installed in venv
+        if vim.fn.executable(venv_python) == 0 then return nil end
+        vim.fn.system(venv_python .. " -c 'import ipykernel' 2>/dev/null")
+        if vim.v.shell_error ~= 0 then return nil end
+
+        local project_name = vim.fn.fnamemodify(venv_path:gsub("/.venv/$", ""), ":t")
+        local kernel_name  = project_name:gsub("[^%w_-]", "_")
+        vim.fn.system(string.format(
+          "%s -m ipykernel install --user --name %s --display-name 'Python (%s)'",
+          venv_python, kernel_name, kernel_name
+        ))
+        if vim.v.shell_error == 0 then
+          vim.notify("Registered Jupyter kernel: " .. kernel_name, vim.log.levels.INFO)
+          return kernel_name
         end
         return nil
       end
 
-      -- Auto-init kernel when opening a jupytext-converted notebook (# %% file)
-      vim.api.nvim_create_autocmd("BufReadPost", {
-        pattern  = "*.py",
-        callback = function()
-          -- Only act on hydrogen-style notebooks (has at least one # %% marker)
+      -- Auto-init kernel for any Python buffer with # %% cells (notebooks)
+      -- Uses FileType instead of BufReadPost so it fires for both .py and .ipynb
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern  = "python",
+        callback = function(ev)
+          if vim.b[ev.buf].molten_auto_init then return end
+          vim.b[ev.buf].molten_auto_init = true
+
           local has_cell = vim.fn.search("^# %%", "nw") > 0
           if not has_cell then return end
-          local kernel = venv_kernel_name()
+
+          local buf_dir = vim.fn.expand("%:p:h")
+          local kernel  = venv_kernel_name(buf_dir)
           if kernel then
             vim.schedule(function()
               pcall(vim.cmd, "MoltenInit " .. kernel)
