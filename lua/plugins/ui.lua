@@ -2,9 +2,17 @@
 -- UI plugins
 -- Covers: colorscheme, statusline, which-key, bufferline,
 --         file explorer, indent guides, color previews,
---         noice, fidget, dressing, rainbow-delimiters
+--         noice, fidget, dressing, rainbow-delimiters, snacks
 -- ============================================================
 return {
+
+  -- Snacks: utility library (used by claudecode.nvim)
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {},
+  },
 
   -- Icons (used by neo-tree, bufferline, lualine, telescope, alpha)
   {
@@ -154,6 +162,7 @@ return {
       local wk = require("which-key")
       wk.setup(opts)
       wk.add({
+        { "<leader>c", group = "Claude" },
         { "<leader>f", group = "Find (telescope)" },
         { "<leader>d", group = "Debug" },
         { "<leader>m", group = "Molten (Jupyter)" },

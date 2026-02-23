@@ -2,9 +2,33 @@
 -- Editor plugins
 -- Covers: motion, telescope, git, autopairs, terminal,
 --         diagnostics, format, session, lint,
---         todo-comments, mini.ai, mini.surround, diffview
+--         todo-comments, mini.ai, mini.surround, diffview,
+--         claudecode
 -- ============================================================
 return {
+
+  -- Claude Code: AI coding assistant integration
+  {
+    "coder/claudecode.nvim",
+    dependencies = { "folke/snacks.nvim" },
+    config = true,
+    keys = {
+      { "<leader>cc", "<cmd>ClaudeCode<cr>", desc = "Claude Code" },
+      { "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Claude focus" },
+      { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Claude resume" },
+      { "<leader>cR", "<cmd>ClaudeCode --continue<cr>", desc = "Claude continue" },
+      { "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Claude send selection" },
+      { "<leader>cb", "<cmd>ClaudeCodeAdd %<cr>", desc = "Claude add buffer" },
+      { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Claude accept diff" },
+      { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Claude deny diff" },
+    },
+    opts = {
+      terminal = {
+        split_side = "right",
+        split_width_percentage = 0.40,
+      },
+    },
+  },
 
   -- Flash jump motion
   {
@@ -73,13 +97,12 @@ return {
     opts  = {},
   },
 
-  -- Persistent terminal + Claude Code + lazygit
+  -- Persistent terminal + lazygit (Claude Code now handled by claudecode.nvim)
   {
     "akinsho/toggleterm.nvim",
     version = "*",
     keys = {
       { "<leader>tt", desc = "Toggle terminal" },
-      { "<leader>cc", desc = "Toggle Claude Code" },
       { "<leader>lg", desc = "Toggle lazygit" },
     },
     config = function()
@@ -117,16 +140,6 @@ return {
           if cmd then vim.api.nvim_chan_send(term.job_id, cmd) end
         end,
       })
-      local claude     = Terminal:new({
-        cmd          = "claude",
-        direction    = "vertical",
-        hidden       = true,
-        display_name = "Claude Code",
-        on_open = function(term)
-          vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
-          vim.cmd("wincmd H") -- push to far left
-        end,
-      })
       local lazygit = Terminal:new({
         cmd          = "lazygit",
         direction    = "float",
@@ -136,7 +149,6 @@ return {
       })
 
       vim.keymap.set("n", "<leader>tt", function() float_term:toggle() end, { desc = "Toggle terminal" })
-      vim.keymap.set("n", "<leader>cc", function() claude:toggle() end,      { desc = "Toggle Claude Code" })
       vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end,     { desc = "Toggle lazygit" })
       vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>",                       { desc = "Exit terminal mode" })
     end,
