@@ -72,10 +72,18 @@ return {
         end,
       })
 
-      -- Import outputs after kernel is ready
+      -- After kernel init: set CWD to notebook dir + import outputs
       vim.api.nvim_create_autocmd("User", {
         pattern  = "MoltenInitPost",
         callback = function()
+          -- Set kernel CWD to notebook directory (matches VSCode behavior)
+          -- so relative paths like "../datasets/file.csv" resolve correctly
+          local nb_dir = vim.fn.expand("%:p:h")
+          if nb_dir ~= "" then
+            local chdir_code = "import os; os.chdir(" .. vim.fn.json_encode(nb_dir) .. ")"
+            pcall(vim.cmd, "MoltenEvaluateArgument " .. chdir_code)
+          end
+
           local ipynb = vim.fn.expand("%:r") .. ".ipynb"
           if vim.fn.filereadable(ipynb) == 1 then
             pcall(vim.cmd, "MoltenImportOutput")
