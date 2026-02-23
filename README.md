@@ -1,91 +1,164 @@
-# nvim config
+# nvim-config
 
-VSCode-parity Neovim setup. Plugin manager: **lazy.nvim**. Leader key: `<Space>`.
+VSCode-parity Neovim configuration for macOS. Uses **lazy.nvim** as the plugin manager.
 
-## What's installed
+## Requirements
 
-| Category | Plugins |
+- **macOS** (setup script is macOS-only; Linux users can adapt manually)
+- **Neovim 0.10+** (tested on 0.11.5)
+- **Homebrew** (for dependency installation)
+- **Nerd Font** (required for icons)
+- **Kitty terminal** (optional, required for inline Jupyter images)
+
+## Installation
+
+### Quick setup (recommended)
+
+```sh
+# Backup existing config if you have one
+mv ~/.config/nvim ~/.config/nvim.bak
+
+# Clone and install
+git clone https://github.com/cmorales95/nvim-config.git ~/.config/nvim
+cd ~/.config/nvim
+./setup.sh
+```
+
+The setup script installs:
+- Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `tree-sitter`, `fd`
+- Lua rocks: `magick` (for image rendering)
+- Python venv at `~/.venvs/nvim` with Jupyter dependencies
+
+### First launch
+
+1. Open Neovim: `nvim`
+2. Wait for lazy.nvim to auto-install all plugins (progress shown at bottom)
+3. Mason will auto-install LSP servers on first use
+4. Restart Neovim after initial setup completes
+
+### Verify installation
+
+```
+:checkhealth              # Full health check
+:Lazy                     # Plugin manager (all should be green)
+:Mason                    # LSP installer (servers should be installed)
+:LspInfo                  # Check LSP attached to current file
+```
+
+## What's included
+
+### Theme & UI
+
+| Plugin | Description |
 |---|---|
-| **Theme / UI** | tokyonight-night, lualine, bufferline, which-key |
-| **File nav** | neo-tree (sidebar), telescope (fuzzy finder) |
-| **Editor** | flash.nvim (jump motion), autopairs, indent guides, colorizer |
-| **Git** | gitsigns (gutter), lazygit (in-terminal UI) |
-| **LSP** | mason + mason-lspconfig auto-installs servers; nvim-cmp for completion |
-| **Formatters** | conform.nvim — format on save |
-| **Diagnostics** | trouble.nvim (Problems panel) |
-| **Terminal** | toggleterm — floating terminal, Claude Code split, lazygit |
-| **Debugger** | nvim-dap + dap-ui; delve (Go), debugpy (Python) |
-| **Jupyter** | molten-nvim — run cells inside `.ipynb` / Python files |
+| catppuccin | Mocha color scheme |
+| lualine | Status line |
+| bufferline | Buffer tabs |
+| neo-tree | File explorer sidebar |
+| alpha-nvim | Dashboard / start screen |
+| which-key | Keybinding hints |
+| noice.nvim | Command line, messages, notifications UI |
+| fidget.nvim | LSP progress indicator |
+| dressing.nvim | Improved vim.ui.select/input |
+| nvim-ufo | LSP-powered code folding |
+| aerial.nvim | Code outline / symbols sidebar |
 
-## Languages supported out of the box
+### Editor
+
+| Plugin | Description |
+|---|---|
+| telescope | Fuzzy finder (files, grep, buffers) |
+| flash.nvim | Jump motion (type chars to jump) |
+| gitsigns | Git gutter signs |
+| toggleterm | Floating terminal, lazygit, Claude Code |
+| trouble.nvim | Diagnostics panel |
+| conform.nvim | Format on save |
+| autopairs | Auto-close brackets/quotes |
+| indent-blankline | Indent guides |
+| rainbow-delimiters | Rainbow brackets |
+| nvim-colorizer | Hex color previews |
+
+### LSP & Completion
+
+| Plugin | Description |
+|---|---|
+| mason | LSP/tool installer |
+| nvim-lspconfig | LSP configuration |
+| nvim-cmp | Autocompletion |
+| SchemaStore | JSON/YAML schema validation |
+
+### Debugging
+
+| Plugin | Description |
+|---|---|
+| nvim-dap | Debug Adapter Protocol |
+| nvim-dap-ui | Debugger UI |
+| nvim-dap-go | Go debugger (delve) |
+| nvim-dap-python | Python debugger (debugpy) |
+
+### Filetype-specific
+
+| Plugin | Description |
+|---|---|
+| molten-nvim | Jupyter notebook support |
+| render-markdown | Inline markdown rendering |
+| markdown-preview | Live preview in browser |
+| rest.nvim | HTTP REST client (.http files) |
+| vim-dadbod | SQL database client |
+
+## Languages supported
 
 | Language | LSP | Formatter | Debugger |
 |---|---|---|---|
-| Go | `gopls` | `goimports` + `gofmt` | delve |
-| Python | `pyright` | `isort` + `black` | debugpy |
-| JS / TS | `ts_ls` | `prettier` | — |
-| R | `r_language_server` | `formatR` | — |
-| Lua | `lua_ls` | `stylua` | — |
+| Go | gopls | goimports + gofmt | delve |
+| Python | pyright | isort + black | debugpy |
+| JS / TS | ts_ls | prettier | - |
+| R | r_language_server | formatR | - |
+| Lua | lua_ls | stylua | - |
+
+Mason auto-installs these on first use.
 
 ## File layout
 
 ```
-init.lua                 ← bootstraps lazy.nvim, loads modules
-lua/
-  config/
-    options.lua          ← vim.opt settings
-    keymaps.lua          ← global keymaps
-  plugins/
-    ui.lua               ← theme, statusline, bufferline, neo-tree, indent guides
-    editor.lua           ← telescope, gitsigns, autopairs, toggleterm, trouble, conform
-    lsp.lua              ← mason, lspconfig, nvim-cmp + completion sources
-    treesitter.lua       ← syntax highlighting grammars
-    dap.lua              ← debuggers (Go + Python)
-    jupyter.lua          ← molten-nvim for Jupyter notebooks
+~/.config/nvim/
+  init.lua              <- bootstraps lazy.nvim, loads modules
+  setup.sh              <- one-command dependency installer
+  README.md             <- this file
+  CLAUDE.md             <- AI assistant instructions
+  lua/
+    config/
+      options.lua       <- vim.opt settings
+      keymaps.lua       <- global keymaps
+    plugins/
+      ui.lua            <- theme, statusline, bufferline, neo-tree
+      editor.lua        <- telescope, gitsigns, toggleterm, trouble, conform
+      lsp.lua           <- mason, lspconfig, nvim-cmp
+      treesitter.lua    <- syntax highlighting
+      dap.lua           <- debuggers (Go + Python)
+      jupyter.lua       <- molten-nvim for Jupyter notebooks
+      filetypes.lua     <- markdown, REST, SQL, schemas
 ```
-
-## Prerequisites
-
-Run these once before first launch:
-
-```sh
-# macOS
-brew install lazygit ripgrep imagemagick luarocks
-
-# Lua binding for image rendering (used by image.nvim)
-luarocks --lua-version 5.1 install magick
-
-# Dedicated Python venv for Neovim (keeps system Python clean)
-uv venv ~/.venvs/nvim --python 3.12
-uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel
-
-# R language server (in R console)
-install.packages("languageserver")
-```
-
-Also install a [Nerd Font](https://www.nerdfonts.com/) and set it as your terminal font (icons won't render without it).
-
-**For inline plot/image output:** requires Kitty terminal (used by default). The config uses Kitty's native image protocol via `image.nvim`.
-
-Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first launch.
 
 ## Key bindings
+
+Leader key: `<Space>`
 
 ### Navigation
 
 | Key | Action |
 |---|---|
-| `<leader>e` | Toggle file explorer (neo-tree) |
+| `<leader>e` | Toggle file explorer |
 | `<leader>ff` | Find files |
 | `<leader>fg` | Live grep |
 | `<leader>fb` | Open buffers |
 | `<leader>fh` | Help tags |
-| `<leader>s` | Flash jump (type chars to jump anywhere) |
-| `]b` / `[b` | Next / prev buffer tab |
+| `<leader>s` | Flash jump |
+| `]b` / `[b` | Next / prev buffer |
 | `<leader>bd` | Close buffer |
 | `<C-h/j/k/l>` | Move between splits |
 
-### LSP (active when a server is attached)
+### LSP
 
 | Key | Action |
 |---|---|
@@ -97,7 +170,7 @@ Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first
 | `<leader>rn` | Rename symbol |
 | `<leader>ca` | Code action |
 | `[d` / `]d` | Prev / next diagnostic |
-| `<leader>xx` | Toggle diagnostics panel (trouble) |
+| `<leader>xx` | Toggle diagnostics panel |
 | `<leader>fm` | Format file |
 
 ### Completion (insert mode)
@@ -126,7 +199,7 @@ Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first
 | Key | Action |
 |---|---|
 | `<leader>tt` | Floating terminal |
-| `<leader>cc` | Claude Code (vertical split, persistent) |
+| `<leader>cc` | Claude Code (vertical split) |
 | `<leader>lg` | lazygit |
 | `<Esc><Esc>` | Exit terminal mode |
 
@@ -134,9 +207,16 @@ Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first
 
 | Key | Action |
 |---|---|
-| `<leader>mi` | MoltenInit — pick a kernel |
-| `<leader>mr` | Run line / visual selection |
+| `<leader>mi` | MoltenInit (pick kernel) |
+| `<leader>mr` | Run line / selection |
 | `<leader>mo` | Show cell output |
+
+### HTTP (rest.nvim)
+
+| Key | Action |
+|---|---|
+| `<leader>rr` | Run HTTP request |
+| `<leader>rl` | Re-run last request |
 
 ### General
 
@@ -145,24 +225,63 @@ Mason auto-installs everything else (`gopls`, `pyright`, `ts_ls`, etc.) on first
 | `<leader>w` | Save |
 | `<leader>q` | Quit |
 | `<Esc>` | Clear search highlight |
-| `<` / `>` (visual) | Indent left / right (stays selected) |
-| `J` / `K` (visual) | Move selection down / up |
+| `<` / `>` (visual) | Indent left / right |
+| `J` / `K` (visual) | Move selection up / down |
 
 ## Common commands
 
 ```
-:Lazy          plugin manager UI
-:Lazy sync     install / update all plugins
-:Mason         LSP/tool installer
-:LspInfo       show active servers for current buffer
-:Telescope     open any telescope picker
-:Neotree       file explorer
-:Trouble       diagnostics panel
-:MoltenInit    start a Jupyter kernel
+:Lazy              Plugin manager UI
+:Lazy sync         Install / update plugins
+:Mason             LSP/tool installer
+:LspInfo           Show active LSP servers
+:Telescope         Fuzzy finder
+:Neotree           File explorer
+:Trouble           Diagnostics panel
+:MoltenInit        Start Jupyter kernel
+:MarkdownPreview   Preview markdown in browser
+:DBUI              SQL database UI
+:Rest run          Run HTTP request
 ```
 
-## Adding things
+## Troubleshooting
 
-- **New plugin** → add a lazy.nvim spec to the appropriate file in `lua/plugins/`
-- **New LSP** → see `CLAUDE.md` for the step-by-step
-- **New language** → use the `/add-lsp` slash command inside Claude Code (`<leader>cc`)
+### Plugin failed to install
+
+```sh
+# Clear plugin cache and reinstall
+rm -rf ~/.local/share/nvim/lazy
+nvim  # plugins will reinstall
+```
+
+### rest.nvim fails with tree-sitter error
+
+Install tree-sitter CLI:
+```sh
+brew install tree-sitter
+```
+
+### LSP not attaching
+
+1. Check `:LspInfo` for errors
+2. Run `:Mason` and verify server is installed
+3. Check `:checkhealth lsp`
+
+### Jupyter images not showing
+
+- Requires Kitty terminal
+- Run `:checkhealth` and look for image.nvim section
+
+### Icons not rendering
+
+Install a Nerd Font and set it as your terminal font.
+
+## Customization
+
+- **Add plugin**: Edit the appropriate file in `lua/plugins/`, run `:Lazy sync`
+- **Add LSP**: See `CLAUDE.md` for step-by-step
+- **Add language**: Use `/add-lsp` command in Claude Code (`<leader>cc`)
+
+## License
+
+MIT

@@ -9,6 +9,7 @@ modular file layout. Supports Go, Python, JavaScript/TypeScript, and Jupyter not
 ```
 ~/.config/nvim/
   init.lua                    ← thin entrypoint: bootstrap lazy + require modules
+  setup.sh                    ← one-command setup script for all dependencies
   CLAUDE.md                   ← this file
   .claude/commands/           ← custom slash commands for Claude Code
   lua/
@@ -152,15 +153,18 @@ Edit `lua/plugins/dap.lua`:
 
 ---
 
-## Prerequisites (manual steps)
+## Prerequisites
+
+Run `./setup.sh` from the repo root to install all dependencies automatically.
+
+### Manual installation (if needed)
 
 | Requirement | Command |
 |-------------|---------|
-| Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel` |
-| Inline images (Jupyter) | `brew install imagemagick luarocks && luarocks --lua-version 5.1 install magick` |
-| lazygit | `brew install lazygit` |
+| Homebrew packages | `brew install neovim lazygit ripgrep imagemagick luarocks tree-sitter fd` |
+| Lua image binding | `luarocks --lua-version 5.1 install magick` |
+| Python venv for nvim | `uv venv ~/.venvs/nvim --python 3.12 && uv pip install --python ~/.venvs/nvim/bin/python pynvim jupyter_client ipykernel cairosvg pnglatex plotly kaleido pyperclip nbformat` |
 | Nerd Font | Install a Nerd Font and set it as terminal font |
-| ripgrep (telescope grep) | `brew install ripgrep` |
 
 Mason auto-installs: `gopls`, `pyright`, `ts_ls`, `lua_ls`, `debugpy`.
 
