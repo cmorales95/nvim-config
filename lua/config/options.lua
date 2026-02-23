@@ -25,6 +25,7 @@ opt.cursorline    = true
 opt.wrap          = false
 opt.scrolloff     = 8
 opt.sidescrolloff = 8
+opt.mouse         = "a"
 opt.showmode      = false   -- lualine shows mode already
 opt.pumheight     = 10      -- completion popup max height
 
@@ -54,6 +55,16 @@ vim.api.nvim_create_autocmd({ "FocusLost", "InsertLeave", "TextChanged" }, {
     if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then
       vim.cmd("silent! write")
     end
+  end,
+})
+
+-- Soft-wrap for code files (wrap at word boundaries, preserve indentation)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "go", "python", "javascript", "typescript", "javascriptreact", "typescriptreact", "jupyter", "markdown" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true      -- wrap at word boundaries, not mid-word
+    vim.opt_local.breakindent = true    -- preserve indentation on wrapped lines
   end,
 })
 
