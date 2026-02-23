@@ -55,6 +55,7 @@ map("n", "<leader>ff", "<cmd>Telescope find_files<cr>",          { desc = "Find 
 map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",           { desc = "Live grep" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",             { desc = "Buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",           { desc = "Help tags" })
+map("n", "<leader>fk", "<cmd>Telescope keymaps<cr>",            { desc = "Search keymaps" })
 map("n", "<leader>fs", "<cmd>Telescope session-lens<cr>",        { desc = "Search sessions" })
 
 -- ----------------------------------------------------------
@@ -110,12 +111,18 @@ map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Search TODOs" })
 -- Debugger
 -- ----------------------------------------------------------
 map("n", "<leader>db", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })
-map("n", "<leader>dc", "<cmd>lua require('dap').continue()<cr>",          { desc = "Continue" })
+map("n", "<leader>dB", "<cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<cr>", { desc = "Clear all breakpoints" })
+map("n", "<leader>dc", "<cmd>lua require('dap').continue()<cr>",          { desc = "Start / Continue" })
 map("n", "<leader>di", "<cmd>lua require('dap').step_into()<cr>",         { desc = "Step into" })
 map("n", "<leader>do", "<cmd>lua require('dap').step_over()<cr>",         { desc = "Step over" })
 map("n", "<leader>dO", "<cmd>lua require('dap').step_out()<cr>",          { desc = "Step out" })
 map("n", "<leader>dt", "<cmd>lua require('dap').terminate()<cr>",         { desc = "Terminate" })
+map("n", "<leader>dr", "<cmd>lua require('dap').restart()<cr>",           { desc = "Restart" })
+map("n", "<leader>dp", "<cmd>lua require('dap').pause()<cr>",             { desc = "Pause" })
 map("n", "<leader>du", "<cmd>lua require('dapui').toggle()<cr>",          { desc = "Toggle DAP UI" })
+map("n", "<leader>de", "<cmd>lua require('dapui').eval()<cr>",            { desc = "Eval expression" })
+map("v", "<leader>de", "<cmd>lua require('dapui').eval()<cr>",            { desc = "Eval selection" })
+map("n", "<leader>dl", "<cmd>lua require('dap').run_last()<cr>",          { desc = "Run last config" })
 
 -- ----------------------------------------------------------
 -- Filetype tools
