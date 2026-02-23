@@ -30,4 +30,7 @@ require("lazy").setup({
   { import = "plugins.filetypes" },
 }, {
   change_detection = { notify = false },
+  rocks = {
+    hererocks = true,  -- auto-install Lua 5.1 for luarocks plugins (rest.nvim)
+  },
 })

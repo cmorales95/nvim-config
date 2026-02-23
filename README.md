@@ -25,7 +25,7 @@ cd ~/.config/nvim
 ```
 
 The setup script installs:
-- Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `tree-sitter`, `fd`
+- Homebrew packages: `neovim`, `lazygit`, `ripgrep`, `imagemagick`, `luarocks`, `tree-sitter-cli`, `fd`
 - Lua rocks: `magick` (for image rendering)
 - Python venv at `~/.venvs/nvim` with Jupyter dependencies
 
@@ -254,11 +254,11 @@ rm -rf ~/.local/share/nvim/lazy
 nvim  # plugins will reinstall
 ```
 
-### rest.nvim fails with tree-sitter error
+### rest.nvim fails with tree-sitter-cli error
 
-Install tree-sitter CLI:
+Install tree-sitter-cli CLI:
 ```sh
-brew install tree-sitter
+brew install tree-sitter-cli
 ```
 
 ### LSP not attaching

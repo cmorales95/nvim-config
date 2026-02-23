@@ -49,7 +49,7 @@ BREW_PACKAGES=(
     "ripgrep"
     "imagemagick"
     "luarocks"
-    "tree-sitter"
+    "tree-sitter-cli"
     "fd"
 )
 
