@@ -68,6 +68,16 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Soft-wrap for .env files (matched by filename since they lack a filetype)
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = ".env*",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+  end,
+})
+
 -- Splits
 opt.splitright = true
 opt.splitbelow = true

@@ -24,7 +24,7 @@ return {
     },
     opts = {
       terminal = {
-        split_side = "right",
+        split_side = "left",
         split_width_percentage = 0.40,
       },
     },
